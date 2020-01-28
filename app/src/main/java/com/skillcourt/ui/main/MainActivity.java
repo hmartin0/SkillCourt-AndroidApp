@@ -34,9 +34,14 @@ import com.skillcourt.ui.configuration.PadConfigFragment;
 
 /**
  * Created by Joshua Mclendon on 2/2/18.
+ *
+ * Edited by Hairon Martin on 1/28/2020
+ *
+ * Removed the Drawer Layour from the application, still need to remove rest of code here
+ * in Main. Drawer Layout affect back button.
+ * Remove mDrawer and mDrawerToggle and fix back button
  */
-public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getName();
     private final static String CONNECTIVITY_ACTION = "CONNECTIVITY_CHANGE";
@@ -94,10 +99,9 @@ public class MainActivity extends AppCompatActivity
         mDrawerToggle = new ActionBarDrawerToggle(
                 this, mDrawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         mDrawer.addDrawerListener(mDrawerToggle);
+        mDrawerToggle.setDrawerIndicatorEnabled(false);
         mDrawerToggle.syncState();
 
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
 
         connectionIntentFilter = new IntentFilter();
         connectionIntentFilter.addAction(CONNECTIVITY_ACTION);
@@ -225,30 +229,6 @@ public class MainActivity extends AppCompatActivity
     };
 
 
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
-        }
-
-        mDrawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -318,7 +298,7 @@ public class MainActivity extends AppCompatActivity
             // Remove back button
             mActionBar.setDisplayHomeAsUpEnabled(false);
             // Show hamburger
-            mDrawerToggle.setDrawerIndicatorEnabled(true);
+            mDrawerToggle.setDrawerIndicatorEnabled(false);
             // Remove the/any drawer toggle listener
             mDrawerToggle.setToolbarNavigationClickListener(null);
             mToolBarNavigationListenerIsRegistered = false;
