@@ -27,6 +27,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Button;
 
 import com.skillcourt.R;
 import com.skillcourt.services.ConnectionService;
@@ -55,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
     IntentFilter connectionIntentFilter;
     ConnectionReceiver connectionReceiver;
     String text = "0";
+    Button homeButton;
+
     private TextView mPadConnected;
     ServiceConnection mConnection = new ServiceConnection() {
         @Override
@@ -80,6 +83,16 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        homeButton = findViewById(R.id.home_play_btn);
+        homeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                findViewById(R.id.hScreen).setVisibility(View.GONE);
+                findViewById(R.id.barScreen).setVisibility(View.VISIBLE);
+            }
+        });
+
 
         Fragment fragment = new HomeFragment();
         FragmentManager fragmentManager = getSupportFragmentManager();
