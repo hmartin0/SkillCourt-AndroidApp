@@ -56,7 +56,8 @@ public class MainActivity extends AppCompatActivity {
     IntentFilter connectionIntentFilter;
     ConnectionReceiver connectionReceiver;
     String text = "0";
-    Button homeButton;
+    private Button homeButton;
+
 
     private TextView mPadConnected;
     ServiceConnection mConnection = new ServiceConnection() {
@@ -85,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         homeButton = findViewById(R.id.home_play_btn);
+
         homeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -168,6 +170,25 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public void padClickerHelper()
+    {
+        if (isConnected()) {
+            if (mConnectionService == null) {
+                Toast.makeText(MainActivity.this, "You must be connected to a pad.", Toast.LENGTH_LONG).show();
+            } else if (mConnectionService.getPadsConnected() > 1) {
+                Log.i(TAG, "Config Pads");
+                Fragment fragment = new PadConfigFragment();
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                startFragmentWithBackButton(fragment, fragmentTransaction, true);
+            } else {
+                Toast.makeText(MainActivity.this, "You must be connected to at least 1 pads.", Toast.LENGTH_LONG).show();
+            }
+        } else {
+            Toast.makeText(MainActivity.this, "You must be connected to a network.", Toast.LENGTH_LONG).show();
+        }
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -175,24 +196,11 @@ public class MainActivity extends AppCompatActivity {
 
         mPadConnected = (TextView) menu.findItem(R.id.pads_connected).getActionView();
         mPadConnected.setText(getUpdatedPadConnectedText());
+
         mPadConnected.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (isConnected()) {
-                    if (mConnectionService == null) {
-                        Toast.makeText(MainActivity.this, "You must be connected to a pad.", Toast.LENGTH_LONG).show();
-                    } else if (mConnectionService.getPadsConnected() > 1) {
-                        Log.i(TAG, "Config Pads");
-                        Fragment fragment = new PadConfigFragment();
-                        FragmentManager fragmentManager = getSupportFragmentManager();
-                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                        startFragmentWithBackButton(fragment, fragmentTransaction, true);
-                    } else {
-                        Toast.makeText(MainActivity.this, "You must be connected to at least 2 pads.", Toast.LENGTH_LONG).show();
-                    }
-                } else {
-                    Toast.makeText(MainActivity.this, "You must be connected to a network.", Toast.LENGTH_LONG).show();
-                }
+                padClickerHelper();
             }
         });
 

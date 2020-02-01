@@ -11,9 +11,34 @@
         android:layout_height="match_parent"
         android:text="HOME FRAGMENT" />
 
+    <RelativeLayout
+        android:id="@+id/main_screen_area"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <Button
+            android:id="@+id/Play_Game"
+            android:layout_width="220dp"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/pad_settings"
+            android:layout_centerHorizontal="true"
+            android:text="Play" />
+
+        <Button
+            android:id="@+id/pad_settings"
+            android:layout_width="220dp"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="25dp"
+            android:layout_marginBottom="25dp"
+            android:text="Pad Settings" />
+
+    </RelativeLayout>
+
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/playButton"

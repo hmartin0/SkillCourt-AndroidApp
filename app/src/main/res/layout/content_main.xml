@@ -9,10 +9,13 @@
     tools:context=".ui.main.MainActivity"
     tools:showIn="@layout/app_bar_main">
 
+
     <FrameLayout
         android:id="@+id/screen_area"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent" >
+    </FrameLayout>
+
 
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/navigation"
