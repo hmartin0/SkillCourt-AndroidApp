@@ -24,9 +24,8 @@ import com.skillcourt.ui.game.GameModeFragment;
  */
 public class HomeFragment extends BaseFragment {
 
-    private FloatingActionButton mPlayButton;
+    private Button mPlayButton;
     private Button padSettingButton;
-    //private Button padSettingButton;
 
     public HomeFragment() {
         // Required empty public constructor
