@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#ffffff</color>
-    <color name="colorPrimaryLight">#29ba9c</color>
+    <color name="colorButtonText">#ffffff</color>
+    <color name="colorPrimaryLight">#09ab75</color>
     <color name="colorPrimaryDark">#388E3C</color>
     <color name="colorAccent">#536dfe</color>
+    <color name="buttonGreen">#5fce5d</color>
+    <color name="toolbarColor">#1285ff</color>
 
-    <color name="colorContainer">#232835</color>
+    <color name="colorContainer">#f5f9ff</color>
     <color name="colorCenter">#4caf50</color>
     <color name="colorStart">#388e3c</color>
-    <color name="background">#232835</color>
+    <color name="background">#e6e9ed</color>
     <color name="colorBlueLight">#42bcf4</color>
     <color name="colorOrange">#ff5930</color>
+
 </resources>
