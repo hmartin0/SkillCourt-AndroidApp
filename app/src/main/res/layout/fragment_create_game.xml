@@ -23,7 +23,7 @@
 
     <EditText
         android:id="@+id/byHitsAmount"
-        android:background="@drawable/custom_edittext"
+        android:background="@drawable/custom_hittext"
         android:layout_width="90dp"
         android:layout_height="45dp"
         android:layout_marginStart="8dp"
@@ -167,7 +167,7 @@
 
     <EditText
         android:id="@+id/padLightUpTime"
-        android:background="@drawable/custom_edittext"
+        android:background="@drawable/custom_hittext"
         android:layout_width="90dp"
         android:layout_height="45dp"
         android:layout_marginBottom="16dp"
@@ -190,7 +190,7 @@
 
     <EditText
         android:id="@+id/padLightUpDelayTime"
-        android:background="@drawable/custom_edittext"
+        android:background="@drawable/custom_hittext"
         android:layout_width="90dp"
         android:layout_height="45dp"
         android:layout_marginBottom="16dp"
