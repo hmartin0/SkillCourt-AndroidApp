@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
 import android.widget.TextView;
+import android.widget.ProgressBar;
 
 import com.skillcourt.R;
 import com.skillcourt.adapters.PlayerViewAdapter;
@@ -71,6 +72,9 @@ public class StartGameFragment extends NonBottomNavigationFragments {
     private TextView mMissCount;
     private TextView mScoreCount;
     private TextView mPlayerCountTv;
+    private TextView sCountLabel;
+    private TextView hText;
+    private TextView mText;
     private boolean mByHits;
     private String mGameMode, mGameType, mGameTimeString, playerOneColor, playerTwoColor, playerThreeColor, playerFourColor;
     private long mGameTime;
@@ -80,6 +84,7 @@ public class StartGameFragment extends NonBottomNavigationFragments {
     private GameService mGameService;
     private Bundle bundle;
     private Player mPlayer;
+    private ProgressBar progressBarCircle;
 
     ServiceConnection mGameConnection = new ServiceConnection() {
         @Override
@@ -146,6 +151,7 @@ public class StartGameFragment extends NonBottomNavigationFragments {
                     mHitCount.setText(String.valueOf(mPlayer.getHitCount()));      //Added to always update the hit count on clock tick//
                     mMissCount.setText(String.valueOf(mPlayer.getMissCount()));    //Added to always update the miss count on clock tick//
                     mScoreCount.setText(String.valueOf(mPlayer.getTotalPoints())); //Added to always update the score on clock tick//
+                    progressBarCircle.setProgress((int) (millisUntilFinished / 1000));
                 }
 
                 public void onFinish() {
@@ -214,6 +220,7 @@ public class StartGameFragment extends NonBottomNavigationFragments {
         // Required empty public constructor
     }
 
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -257,6 +264,8 @@ public class StartGameFragment extends NonBottomNavigationFragments {
         mGameMode = bundle.getString("GAME_MODE");
         mByHits = bundle.getBoolean("BY_HITS");
 
+
+
         if (mGameMode == null || mGameMode.isEmpty()) {
             mGameMode = "Random";
         }
@@ -292,6 +301,10 @@ public class StartGameFragment extends NonBottomNavigationFragments {
         mHitCount = view.findViewById(R.id.hitCount);
         mMissCount = view.findViewById(R.id.missCount);
         mGameModeTv = view.findViewById(R.id.gameMode);
+        sCountLabel= view.findViewById(R.id.scoreCountLabel);
+        hText = view.findViewById(R.id.hitText);
+        mText= view.findViewById(R.id.missText);
+        progressBarCircle = view.findViewById(R.id.progressBarCircle);
        /*
         mPlayerViewAdapter = new PlayerViewAdapter(getContext(), mPlayerCount);
         mGridView = view.findViewById(R.id.padGameGridView);
@@ -305,6 +318,12 @@ public class StartGameFragment extends NonBottomNavigationFragments {
         mScoreCount.setVisibility(View.INVISIBLE);
         mPlayerCountTv.setVisibility(View.INVISIBLE);
         mGameModeTv.setVisibility(View.INVISIBLE);
+        sCountLabel.setVisibility(View.INVISIBLE);
+        hText.setVisibility(View.INVISIBLE);
+        mText.setVisibility(View.INVISIBLE);
+        progressBarCircle.setVisibility(View.INVISIBLE);
+
+        progressBarCircle.setMax((int) mGameTime);
         updateTimerText(mGameTime);
         mPlayer = players.get(0);
         if (mByHits) {
@@ -337,6 +356,8 @@ public class StartGameFragment extends NonBottomNavigationFragments {
 
     private void updateTimerText(long seconds) {
         String time;
+
+
         if (seconds >= 60) {
             int minute = (int) seconds / 60;
             seconds = seconds % 60;
@@ -368,6 +389,11 @@ public class StartGameFragment extends NonBottomNavigationFragments {
                     mMissCount.setVisibility(View.VISIBLE);
                     mScoreCount.setVisibility(View.VISIBLE);
                     mPlayerCountTv.setVisibility(View.VISIBLE);
+                    sCountLabel.setVisibility(View.VISIBLE);
+                    hText.setVisibility(View.VISIBLE);
+                    mText.setVisibility(View.VISIBLE);
+                    progressBarCircle.setVisibility(View.VISIBLE);
+
                     //mGridView.setVisibility(View.VISIBLE);
                 }
             });
