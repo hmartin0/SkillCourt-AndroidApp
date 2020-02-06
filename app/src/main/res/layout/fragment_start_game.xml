@@ -136,7 +136,7 @@
         android:gravity="center"
         android:text="0"
         android:textColor="@color/colorPrimary"
-        android:textSize="35dp"
+        android:textSize="25dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline14" />
 
@@ -150,7 +150,7 @@
         android:gravity="center"
         android:text="0"
         android:textColor="@color/colorPrimary"
-        android:textSize="35dp"
+        android:textSize="25dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline14" />
 

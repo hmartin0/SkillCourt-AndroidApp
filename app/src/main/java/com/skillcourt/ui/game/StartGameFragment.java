@@ -30,6 +30,7 @@ import com.skillcourt.adapters.PlayerViewAdapter;
 import com.skillcourt.services.GameService;
 import com.skillcourt.structures.Player;
 import com.skillcourt.ui.main.NonBottomNavigationFragments;
+import java.util.concurrent.TimeUnit;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -127,14 +128,14 @@ public class StartGameFragment extends NonBottomNavigationFragments {
                             getActivity().runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    updateTimerText(count);
+                                    updateTimerText(count, -2);
                                     mMissCount.setText(String.valueOf(mPlayer.getMissCount()));    //Added to always update the miss count on clock tick//
                                     mScoreCount.setText(String.valueOf(mPlayer.getTotalPoints())); //Added to always update the score on clock tick//
                                 }
                             });
                         }
                         count++;
-                        handler.postDelayed(timer, 1000);
+                        handler.postDelayed(timer, 1);
                     }
 
                 }
@@ -143,14 +144,21 @@ public class StartGameFragment extends NonBottomNavigationFragments {
             };
 
 
-            gameTimer = new CountDownTimer(mGameTime * 1000, 1000) {
+            gameTimer = new CountDownTimer(mGameTime * 1000, 1) {
 
                 public void onTick(long millisUntilFinished) {
-                    Log.i(TAG, "Count down game time " + millisUntilFinished);
-                    updateTimerText(millisUntilFinished / 1000);
+                    int millisecond = (int)(millisUntilFinished % 1000) / 10 ;
+
+                    if(millisecond >= 10 && millisecond <=11)
+                    {
+                        Log.i(TAG, "Count down game time " + millisUntilFinished);
+                    }
+
+                    updateTimerText(millisUntilFinished / 1000, millisecond);
                     mHitCount.setText(String.valueOf(mPlayer.getHitCount()));      //Added to always update the hit count on clock tick//
                     mMissCount.setText(String.valueOf(mPlayer.getMissCount()));    //Added to always update the miss count on clock tick//
                     mScoreCount.setText(String.valueOf(mPlayer.getTotalPoints())); //Added to always update the score on clock tick//
+
                     progressBarCircle.setProgress((int) (millisUntilFinished / 1000));
                 }
 
@@ -324,10 +332,10 @@ public class StartGameFragment extends NonBottomNavigationFragments {
         progressBarCircle.setVisibility(View.INVISIBLE);
 
         progressBarCircle.setMax((int) mGameTime);
-        updateTimerText(mGameTime);
+        updateTimerText(mGameTime, -1);
         mPlayer = players.get(0);
         if (mByHits) {
-            mHitCount.setText(String.valueOf(mPlayer.getHitCount()) + "/" + mHitAmount);
+            mHitCount.setText(String.valueOf(mPlayer.getHitCount()) + "\n/" + mHitAmount);
         }
 
         mGameModeTv.setText(mGameMode);
@@ -354,25 +362,56 @@ public class StartGameFragment extends NonBottomNavigationFragments {
     }
 
 
-    private void updateTimerText(long seconds) {
+    private void updateTimerText(long seconds, int milliseconds) {
         String time;
 
+        if(milliseconds == -2)
+        {
+            milliseconds = ((int)seconds % 1000)/10;
+            seconds = seconds / 1000;
+        }
 
-        if (seconds >= 60) {
-            int minute = (int) seconds / 60;
-            seconds = seconds % 60;
-            if (seconds < 10) {
-                time = minute + ":0" + seconds;
+        // print for milliseconds on the layout
+        if (milliseconds != -1)
+        {
+            if (seconds >= 60) {
+                int minute = (int) seconds / 60;
+                seconds = seconds % 60;
+                if (seconds < 10) {
+                    time = minute + ":0" + seconds + ":" + milliseconds;
+                } else {
+                    time = minute + ":" + seconds + ":" + milliseconds;
+                }
             } else {
-                time = minute + ":" + seconds;
+                if (seconds < 10) {
+                    time = "00:0" + seconds + ":" + milliseconds;
+                } else {
+                    time = "00:" + seconds + ":" + milliseconds;
+                }
             }
-        } else {
-            if (seconds < 10) {
-                time = "00:0" + seconds;
+
+        }
+        //print without milliseconds
+        else
+        {
+            if (seconds >= 60) {
+                int minute = (int) seconds / 60;
+                seconds = seconds % 60;
+                if (seconds < 10) {
+                    time = minute + ":0" + seconds;
+                } else {
+                    time = minute + ":" + seconds;
+                }
             } else {
-                time = "00:" + seconds;
+                if (seconds < 10) {
+                    time = "00:0" + seconds;
+                } else {
+                    time = "00:" + seconds;
+                }
             }
         }
+
+
         mTimer.setText(time);
         mGameTimeString = time;
     }
@@ -412,7 +451,7 @@ public class StartGameFragment extends NonBottomNavigationFragments {
                         @Override
                         public void run() {
                             if (mByHits) {
-                                mHitCount.setText(String.valueOf(mPlayer.getHitCount()) + "/" + mHitAmount);
+                                mHitCount.setText(String.valueOf(mPlayer.getHitCount()) + "\n/" + mHitAmount);
                                 mMissCount.setText(String.valueOf(mPlayer.getMissCount()));
                             } else {
                                 mHitCount.setText(String.valueOf(mPlayer.getHitCount()));
