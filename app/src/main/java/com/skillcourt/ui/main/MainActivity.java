@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
     ConnectionReceiver connectionReceiver;
     String text = "0";
     private Button homeButton;
+    public DatabaseHelper myDB;
 
 
     private TextView mPadConnected;
@@ -84,6 +85,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        myDB = new DatabaseHelper(this);
 
         homeButton = findViewById(R.id.home_play_btn);
 

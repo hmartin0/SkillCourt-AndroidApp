@@ -17,10 +17,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.skillcourt.R;
 import com.skillcourt.services.ConnectionService;
 import com.skillcourt.ui.main.HomeFragment;
+import com.skillcourt.ui.main.MainActivity;
 import com.skillcourt.ui.main.NonBottomNavigationFragments;
 
 import at.grabner.circleprogress.CircleProgressView;
@@ -152,6 +154,11 @@ public class GameOverFragment extends NonBottomNavigationFragments {
         }
         mCircleView.setValueAnimated(hit);
 
+        //Add data to the database *******************************************************
+        System.out.println("SCORE!!!!!!!!! " + mGameTime + " " + totalPoints + " " + testHit);
+        addData("2/9/20", ""+mGameTime, ""+totalPoints, ""+testHit);
+        //Add data to the database *******************************************************
+
         mPlayAgainButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -212,6 +219,20 @@ public class GameOverFragment extends NonBottomNavigationFragments {
             } else {
                 mTime.setText("00:" + seconds);
             }
+        }
+    }
+
+    public void addData(String date, String time, String score, String hit)
+    {
+        boolean isInserted = mainActivity.myDB.insertData(date,time,score,hit);
+
+        if(isInserted == true)
+        {
+            Toast.makeText(getActivity(), "Data Added!", Toast.LENGTH_SHORT).show();
+        }
+        else
+        {
+            Toast.makeText(getActivity(), "Data NOT Added!", Toast.LENGTH_SHORT).show();
         }
     }
 }
