@@ -25,6 +25,11 @@ import com.skillcourt.ui.main.HomeFragment;
 import com.skillcourt.ui.main.MainActivity;
 import com.skillcourt.ui.main.NonBottomNavigationFragments;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 import at.grabner.circleprogress.CircleProgressView;
 
 import static android.content.Context.BIND_AUTO_CREATE;
@@ -154,9 +159,13 @@ public class GameOverFragment extends NonBottomNavigationFragments {
         }
         mCircleView.setValueAnimated(hit);
 
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yy");
+        String dateOutput = dateFormat.format(calendar.getTime());
+
         //Add data to the database *******************************************************
-        System.out.println("SCORE!!!!!!!!! " + mGameTime + " " + totalPoints + " " + testHit);
-        addData("2/9/20", ""+mGameTime, ""+totalPoints, ""+testHit);
+        System.out.println("mGameTime " +mGameTime + " mTime " + mTime.getText());
+        addData(dateOutput, ""+mTime.getText(), ""+totalPoints, ""+(testHit + "/" + (testHit + testMiss)));
         //Add data to the database *******************************************************
 
         mPlayAgainButton.setOnClickListener(new View.OnClickListener() {
@@ -228,11 +237,11 @@ public class GameOverFragment extends NonBottomNavigationFragments {
 
         if(isInserted == true)
         {
-            Toast.makeText(getActivity(), "Data Added!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "PlayerData Added!", Toast.LENGTH_SHORT).show();
         }
         else
         {
-            Toast.makeText(getActivity(), "Data NOT Added!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "PlayerData NOT Added!", Toast.LENGTH_SHORT).show();
         }
     }
 }
