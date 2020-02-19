@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_root"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:padding="10dp" >
+
+    <TextView
+        android:id="@+id/promptTextViewTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:text="Create or Save to Session: "
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <EditText
+        android:id="@+id/editTextDialogUserInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="number">
+
+        <requestFocus />
+
+    </EditText>
+
+    <ListView
+        android:id="@+id/prompListView"
+        android:layout_marginTop="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:dividerHeight="3dp"
+        android:divider="@color/colorButtonText"/>
+
+</LinearLayout>

@@ -71,6 +71,18 @@
         android:textColor="@color/colorButtonText" />
 
     <Button
+        android:id="@+id/save_data_button"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/game_over_play_again_btn"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="15dp"
+        android:background="@drawable/home_play_color"
+        android:text="Save Score"
+        android:textAlignment="center"
+        android:textColor="@color/colorButtonText" />
+
+    <Button
         android:id="@+id/game_over_home_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

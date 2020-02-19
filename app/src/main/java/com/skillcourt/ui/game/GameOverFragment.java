@@ -1,9 +1,12 @@
 package com.skillcourt.ui.game;
 
 
+import android.app.AlertDialog;
 import android.content.ComponentName;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -15,19 +18,26 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.skillcourt.R;
 import com.skillcourt.services.ConnectionService;
+import com.skillcourt.structures.SessionData;
+import com.skillcourt.structures.SessionListAdapter;
 import com.skillcourt.ui.main.HomeFragment;
 import com.skillcourt.ui.main.MainActivity;
 import com.skillcourt.ui.main.NonBottomNavigationFragments;
+import com.skillcourt.ui.main.StatsFragment;
 
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import at.grabner.circleprogress.CircleProgressView;
@@ -40,16 +50,21 @@ import static android.content.Context.BIND_AUTO_CREATE;
 public class GameOverFragment extends NonBottomNavigationFragments {
 
     private static final String TAG = GameOverFragment.class.getSimpleName();
-    private TextView mScore, mHits, mMode, mTime;
-    private Button mPlayAgainButton, mNewGameButton, mHomeButton;
+    private TextView mScore, mHits, mMode, mTime, promptTitleText;
+    private Button mPlayAgainButton, mNewGameButton, mHomeButton, saveDataButton;
     private int testHit;
     private int testMiss;
     private String mGameMode;
     private long mGameTime;
+    private String mGameTimeString;
     private int hit, miss, totalPoints;
+    private ArrayList<SessionData> sessionList;
+    SessionListAdapter adapter;
+    private int positionID;
     private CircleProgressView mCircleView;
     public ConnectionService mConnectionService;
     public boolean mBounded = false;
+    public String dateOutput;
 
 
     ServiceConnection mConnection = new ServiceConnection() {
@@ -111,6 +126,7 @@ public class GameOverFragment extends NonBottomNavigationFragments {
         final Bundle bundle = getArguments();
         mGameMode = bundle.getString("GAME_MODE");
         mGameTime = bundle.getLong("GAME_TIME", 30);
+        mGameTimeString = bundle.getString("GAME_TIME_STRING");
         testHit = bundle.getInt("HIT_COUNT", 0);
         testMiss = bundle.getInt("MISS_COUNT", 0);
         totalPoints = bundle.getInt("SCORE", 0);
@@ -128,6 +144,8 @@ public class GameOverFragment extends NonBottomNavigationFragments {
         mPlayAgainButton = view.findViewById(R.id.game_over_play_again_btn);
         mNewGameButton = view.findViewById(R.id.game_over_new_game_btn);
         mHomeButton = view.findViewById(R.id.game_over_home_btn);
+        saveDataButton = view.findViewById(R.id.save_data_button);
+        promptTitleText = view.findViewById(R.id.promptTextViewTitle);
 
         if (mGameMode == null) {
             mGameMode = "Random";
@@ -139,10 +157,11 @@ public class GameOverFragment extends NonBottomNavigationFragments {
             totalPoints = 0;
         }
         mScore.setText("Score: " + totalPoints);
+
         if (mGameTime != 0) {
             setGameTimeText(mGameTime);
         } else {
-            mTime.setText(bundle.getString("GAME_TIME_STRING"));
+            mTime.setText(mGameTimeString);
         }
 
 
@@ -161,12 +180,20 @@ public class GameOverFragment extends NonBottomNavigationFragments {
 
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yy");
-        String dateOutput = dateFormat.format(calendar.getTime());
+        dateOutput = dateFormat.format(calendar.getTime());
 
         //Add data to the database *******************************************************
-        System.out.println("mGameTime " +mGameTime + " mTime " + mTime.getText());
-        addData(dateOutput, ""+mTime.getText(), ""+totalPoints, ""+(testHit + "/" + (testHit + testMiss)));
+        addPlayerData(dateOutput, ""+mTime.getText(), ""+totalPoints, ""+(testHit + "/" + (testHit + testMiss)));
         //Add data to the database *******************************************************
+
+        // Save data to database
+        saveDataButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveSession();
+            }
+        });
+
 
         mPlayAgainButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -231,17 +258,120 @@ public class GameOverFragment extends NonBottomNavigationFragments {
         }
     }
 
-    public void addData(String date, String time, String score, String hit)
+    /*********************************************************************************************/
+
+    public ArrayList<SessionData> getSessionData()
+    {
+        Cursor res = mainActivity.myDB.getAllSessionData();
+        ArrayList<SessionData> tempList = new ArrayList<>();
+
+        if(res.getCount() == 0)
+        {
+            Toast.makeText(getActivity(), "Create a New Session!", Toast.LENGTH_SHORT).show();
+        }
+
+        while(res.moveToNext())
+        {
+            String idSessionStats = res.getString(0);
+            String dateSessionStats = res.getString(1);
+
+            SessionData stats = new SessionData(idSessionStats,dateSessionStats);
+            tempList.add(stats);
+        }
+
+        return tempList;
+    }
+
+
+    private void saveSession()
+    {
+        View view =(LayoutInflater.from(getActivity()).inflate(R.layout.prompts, null));
+
+        final ListView gamePromptListView = view.findViewById(R.id.prompListView);
+        final EditText userInput = view.findViewById(R.id.editTextDialogUserInput);
+        sessionList = new ArrayList<>();
+        sessionList = getSessionData();
+
+        adapter = new SessionListAdapter(getActivity(), R.layout.adapter_session_view_layout, sessionList);
+        gamePromptListView.setAdapter(adapter);
+
+        gamePromptListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                SessionData content = sessionList.get(i);
+                positionID = Integer.parseInt(content.getSessionID());
+                userInput.setText(Integer.toString(positionID));
+            }
+        });
+
+        //ADD EXCEPTION OF NOT CREATE NEW SESSION IF IS ALREADY IN LIST
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+        alertDialogBuilder.setView(view);
+
+        alertDialogBuilder
+                .setCancelable(false)
+                .setPositiveButton("OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog,int id) {
+
+                                String value = userInput.getText().toString();
+                                int sessionID = Integer.parseInt(value);
+
+                                Cursor resSessionID = mainActivity.myDB.getSessionID(value);
+                                if(resSessionID.getCount() == 0)
+                                {
+                                    //Toast.makeText(getActivity(), "Session Not in Database", Toast.LENGTH_SHORT).show();
+                                    addSessionData(sessionID, dateOutput);
+                                }
+                                else
+                                {
+                                    Toast.makeText(getActivity(), "Session In Database!", Toast.LENGTH_SHORT).show();
+                                }
+
+                                //saveDataButton.setEnabled(false);
+                            }
+                        })
+                .setNegativeButton("Cancel",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog,int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+
+        alertDialog.show();
+    }
+
+
+    public void addSessionData(Integer session_ID, String session_date)
+    {
+        boolean isInserted = mainActivity.myDB.insertSessionData(session_ID,session_date);
+
+        if(isInserted == true)
+        {
+            Toast.makeText(getActivity(), "Session Added!", Toast.LENGTH_SHORT).show();
+        }
+        else
+        {
+            Toast.makeText(getActivity(), "Session NOT Added!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+    public void addPlayerData(String date, String time, String score, String hit)
     {
         boolean isInserted = mainActivity.myDB.insertData(date,time,score,hit);
 
         if(isInserted == true)
         {
-            Toast.makeText(getActivity(), "PlayerData Added!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Player Data Added!", Toast.LENGTH_SHORT).show();
         }
         else
         {
-            Toast.makeText(getActivity(), "PlayerData NOT Added!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Player Data NOT Added!", Toast.LENGTH_SHORT).show();
         }
     }
 }

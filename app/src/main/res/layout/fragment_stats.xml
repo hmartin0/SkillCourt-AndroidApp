@@ -17,7 +17,7 @@
         android:orientation="horizontal"
         android:paddingTop="6dp"
         android:paddingBottom="6dp"
-        app:layout_constraintBottom_toTopOf="@+id/dataListView"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -31,8 +31,8 @@
             android:layout_gravity="center_vertical"
             android:textSize="20sp"
             android:textColor="@color/colorPrimary"
-            android:text="ID"
-            android:layout_weight="12"/>
+            android:text="Session"
+            android:layout_weight="49"/>
 
         <TextView
             android:layout_width="22dp"
@@ -43,55 +43,39 @@
             android:textSize="20sp"
             android:textColor="@color/colorPrimary"
             android:text="Date"
-            android:layout_weight="22"/>
+            android:layout_weight="49"/>
 
-        <TextView
-            android:layout_width="22dp"
-            android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:gravity="center"
-            android:layout_gravity="center_vertical"
-            android:textSize="20sp"
-            android:textColor="@color/colorPrimary"
-            android:text="Game Time"
-            android:layout_weight="22"/>
-
-        <TextView
-            android:layout_width="22dp"
-            android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:gravity="center"
-            android:textSize="20sp"
-            android:layout_gravity="center_vertical"
-            android:textColor="@color/colorPrimary"
-            android:text="Score"
-            android:layout_weight="22"/>
-
-        <TextView
-            android:layout_width="22dp"
-            android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:gravity="center"
-            android:textSize="20sp"
-            android:layout_gravity="center_vertical"
-            android:textColor="@color/colorPrimary"
-            android:text="Hits"
-            android:layout_weight="22"/>
 
     </LinearLayout>
 
 
-    <com.baoyz.swipemenulistview.SwipeMenuListView
-        android:id="@+id/dataListView"
+    <LinearLayout
+        android:id="@+id/linearLayout3"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:dividerHeight="3dp"
-        android:divider="@color/background"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/linearLayout2"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
+        app:layout_constraintStart_toStartOf="parent">
 
+        <com.baoyz.swipemenulistview.SwipeMenuListView
+            android:id="@+id/dataListView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:dividerHeight="3dp"
+            android:divider="@color/background"
+            android:visibility="visible">
+        </com.baoyz.swipemenulistview.SwipeMenuListView>
+
+        <com.baoyz.swipemenulistview.SwipeMenuListView
+            android:id="@+id/playerDataListView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:dividerHeight="3dp"
+            android:divider="@color/background"
+            android:visibility="gone"/>
+
+    </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>
