@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
+    android:layout_marginTop="8dp"
+    android:layout_marginBottom="8dp"
+    android:weightSum="100"
+    android:background="@drawable/listview_background">
+
+    <!--Layout_weight must sum up to 99.9 for equal distance between TextViews-->
+    <TextView
+        android:id="@+id/idSessionTextView"
+        android:layout_width="49dp"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:textSize="16sp"
+        android:textColor="@color/colorPrimary"
+        android:text="1"
+        android:layout_weight="49"/>
+
+    <TextView
+        android:id="@+id/dateSessionTextView"
+        android:layout_width="49dp"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:textSize="16sp"
+        android:textColor="@color/colorPrimary"
+        android:text="2"
+        android:layout_weight="49"/>
+
+</LinearLayout>
