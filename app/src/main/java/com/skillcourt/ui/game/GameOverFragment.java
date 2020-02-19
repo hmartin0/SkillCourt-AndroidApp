@@ -133,7 +133,7 @@ public class GameOverFragment extends NonBottomNavigationFragments {
 
         hit = (int) ((double) testHit / (testHit + testMiss) * 100);
         miss = (int) ((double) testMiss / (testHit + testMiss) * 100);
-
+        //System.out.println("Hello");
         Log.i("GameOverActivity", "Hit: " + hit + "%" + " Miss: " + miss + "%");
 
         mCircleView = view.findViewById(R.id.game_over_progress);
