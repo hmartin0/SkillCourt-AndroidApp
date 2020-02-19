@@ -17,11 +17,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.skillcourt.R;
 import com.skillcourt.services.ConnectionService;
 import com.skillcourt.ui.main.HomeFragment;
+import com.skillcourt.ui.main.MainActivity;
 import com.skillcourt.ui.main.NonBottomNavigationFragments;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 import at.grabner.circleprogress.CircleProgressView;
 
@@ -152,6 +159,15 @@ public class GameOverFragment extends NonBottomNavigationFragments {
         }
         mCircleView.setValueAnimated(hit);
 
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yy");
+        String dateOutput = dateFormat.format(calendar.getTime());
+
+        //Add data to the database *******************************************************
+        System.out.println("mGameTime " +mGameTime + " mTime " + mTime.getText());
+        addData(dateOutput, ""+mTime.getText(), ""+totalPoints, ""+(testHit + "/" + (testHit + testMiss)));
+        //Add data to the database *******************************************************
+
         mPlayAgainButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -212,6 +228,20 @@ public class GameOverFragment extends NonBottomNavigationFragments {
             } else {
                 mTime.setText("00:" + seconds);
             }
+        }
+    }
+
+    public void addData(String date, String time, String score, String hit)
+    {
+        boolean isInserted = mainActivity.myDB.insertData(date,time,score,hit);
+
+        if(isInserted == true)
+        {
+            Toast.makeText(getActivity(), "PlayerData Added!", Toast.LENGTH_SHORT).show();
+        }
+        else
+        {
+            Toast.makeText(getActivity(), "PlayerData NOT Added!", Toast.LENGTH_SHORT).show();
         }
     }
 }

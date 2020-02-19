@@ -27,6 +27,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Button;
 
 import com.skillcourt.R;
 import com.skillcourt.services.ConnectionService;
@@ -34,9 +35,14 @@ import com.skillcourt.ui.configuration.PadConfigFragment;
 
 /**
  * Created by Joshua Mclendon on 2/2/18.
+ *
+ * Edited by Hairon Martin on 1/28/2020
+ *
+ * Removed the Drawer Layour from the application, still need to remove rest of code here
+ * in Main. Drawer Layout affect back button.
+ * Remove mDrawer and mDrawerToggle and fix back button
  */
-public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getName();
     private final static String CONNECTIVITY_ACTION = "CONNECTIVITY_CHANGE";
@@ -50,6 +56,10 @@ public class MainActivity extends AppCompatActivity
     IntentFilter connectionIntentFilter;
     ConnectionReceiver connectionReceiver;
     String text = "0";
+    private Button homeButton;
+    public DatabaseHelper myDB;
+
+
     private TextView mPadConnected;
     ServiceConnection mConnection = new ServiceConnection() {
         @Override
@@ -76,6 +86,19 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        myDB = new DatabaseHelper(this);
+
+        homeButton = findViewById(R.id.home_play_btn);
+
+        homeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                findViewById(R.id.hScreen).setVisibility(View.GONE);
+                findViewById(R.id.barScreen).setVisibility(View.VISIBLE);
+            }
+        });
+
+
         Fragment fragment = new HomeFragment();
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -94,10 +117,9 @@ public class MainActivity extends AppCompatActivity
         mDrawerToggle = new ActionBarDrawerToggle(
                 this, mDrawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         mDrawer.addDrawerListener(mDrawerToggle);
+        mDrawerToggle.setDrawerIndicatorEnabled(false);
         mDrawerToggle.syncState();
 
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
 
         connectionIntentFilter = new IntentFilter();
         connectionIntentFilter.addAction(CONNECTIVITY_ACTION);
@@ -151,6 +173,25 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    public void padClickerHelper()
+    {
+        if (isConnected()) {
+            if (mConnectionService == null) {
+                Toast.makeText(MainActivity.this, "You must be connected to a pad.", Toast.LENGTH_LONG).show();
+            } else if (mConnectionService.getPadsConnected() > 1) {
+                Log.i(TAG, "Config Pads");
+                Fragment fragment = new PadConfigFragment();
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                startFragmentWithBackButton(fragment, fragmentTransaction, true);
+            } else {
+                Toast.makeText(MainActivity.this, "You must be connected to at least 1 pads.", Toast.LENGTH_LONG).show();
+            }
+        } else {
+            Toast.makeText(MainActivity.this, "You must be connected to a network.", Toast.LENGTH_LONG).show();
+        }
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -158,24 +199,11 @@ public class MainActivity extends AppCompatActivity
 
         mPadConnected = (TextView) menu.findItem(R.id.pads_connected).getActionView();
         mPadConnected.setText(getUpdatedPadConnectedText());
+
         mPadConnected.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (isConnected()) {
-                    if (mConnectionService == null) {
-                        Toast.makeText(MainActivity.this, "You must be connected to a pad.", Toast.LENGTH_LONG).show();
-                    } else if (mConnectionService.getPadsConnected() > 1) {
-                        Log.i(TAG, "Config Pads");
-                        Fragment fragment = new PadConfigFragment();
-                        FragmentManager fragmentManager = getSupportFragmentManager();
-                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                        startFragmentWithBackButton(fragment, fragmentTransaction, true);
-                    } else {
-                        Toast.makeText(MainActivity.this, "You must be connected to at least 2 pads.", Toast.LENGTH_LONG).show();
-                    }
-                } else {
-                    Toast.makeText(MainActivity.this, "You must be connected to a network.", Toast.LENGTH_LONG).show();
-                }
+                padClickerHelper();
             }
         });
 
@@ -224,30 +252,6 @@ public class MainActivity extends AppCompatActivity
         }
     };
 
-
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
-        }
-
-        mDrawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
 
     @Override
     protected void onResume() {
@@ -318,7 +322,7 @@ public class MainActivity extends AppCompatActivity
             // Remove back button
             mActionBar.setDisplayHomeAsUpEnabled(false);
             // Show hamburger
-            mDrawerToggle.setDrawerIndicatorEnabled(true);
+            mDrawerToggle.setDrawerIndicatorEnabled(false);
             // Remove the/any drawer toggle listener
             mDrawerToggle.setToolbarNavigationClickListener(null);
             mToolBarNavigationListenerIsRegistered = false;

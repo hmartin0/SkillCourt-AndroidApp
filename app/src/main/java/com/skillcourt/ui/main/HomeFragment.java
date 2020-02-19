@@ -10,7 +10,9 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
+
 
 
 import com.skillcourt.R;
@@ -22,7 +24,8 @@ import com.skillcourt.ui.game.GameModeFragment;
  */
 public class HomeFragment extends BaseFragment {
 
-    private FloatingActionButton mPlayButton;
+    private Button mPlayButton;
+    private Button padSettingButton;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -31,9 +34,11 @@ public class HomeFragment extends BaseFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -48,8 +53,16 @@ public class HomeFragment extends BaseFragment {
         super.onViewCreated(view, savedInstanceState);
 
 
-
+        padSettingButton = getActivity().findViewById(R.id.pad_settings);
         mPlayButton = getActivity().findViewById(R.id.playButton);
+
+        padSettingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                System.out.println("HERE!");
+                mainActivity.padClickerHelper();
+            }
+        });
 
         mPlayButton.setOnClickListener(new View.OnClickListener() {
             @Override
