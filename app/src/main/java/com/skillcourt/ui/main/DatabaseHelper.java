@@ -21,11 +21,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COL_3 = "TIME";
     public static final String COL_4 = "SCORE";
     public static final String COL_5 = "HIT";
-    //public static final String COL_6 = "SESSIONPLAYER_ID";
+    public static final String COL_6 = "SESSIONPLAYER_ID";
 
 
     public DatabaseHelper(@Nullable Context context) {
-        super(context, DATABASE_NAME, null, 2);
+        super(context, DATABASE_NAME, null, 3);
     }
 
     @Override
@@ -37,7 +37,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "DATE TEXT, " +
                 "TIME TEXT, " +
                 "SCORE TEXT, " +
-                "HIT TEXT)");
+                "HIT TEXT, " +
+                "SESSIONPLAYER_ID INTEGER)");
 
     }
 
@@ -69,7 +70,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
 
-    public boolean insertData(String date, String time, String score, String hit)
+    public boolean insertData(String date, String time, String score, String hit,Integer sessionPlayerID)
     {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
 
@@ -78,6 +79,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(COL_3, time);
         contentValues.put(COL_4, score);
         contentValues.put(COL_5, hit);
+        contentValues.put(COL_6, sessionPlayerID);
 
         long result = sqLiteDatabase.insert(TABLE_NAME, null, contentValues);
 
@@ -91,10 +93,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    public Cursor getAllData()
+    public Cursor getAllPlayerData()
     {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         Cursor res = sqLiteDatabase.rawQuery("select * from "+TABLE_NAME+" ORDER BY ID DESC", null);
+        return res;
+    }
+
+    public Cursor getPlayerSessionDATA(String sId)
+    {
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        Cursor res = sqLiteDatabase.rawQuery("select * from " + TABLE_NAME +" WHERE SESSIONPLAYER_ID=" + sId + " ORDER BY ID DESC", null);
         return res;
     }
 
@@ -105,7 +114,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return res;
     }
 
-    public Cursor getSessionID(String id)
+    public Cursor getAllSessionID(String id)
     {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         Cursor res = sqLiteDatabase.rawQuery("select * from "+TABLE_SESSION+" WHERE SESSION_ID=" + id, null);
@@ -124,4 +133,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         return sqLiteDatabase.delete(TABLE_SESSION, "SESSION_ID = ?", new String[]{id});
     }
+
+    public Integer deletePlayerInSessionData(String id)
+    {
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        return sqLiteDatabase.delete(TABLE_NAME, "SESSIONPLAYER_ID = ?", new String[]{id});
+    }
+
 }

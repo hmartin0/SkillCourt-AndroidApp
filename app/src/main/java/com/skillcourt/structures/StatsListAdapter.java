@@ -26,6 +26,7 @@ public class StatsListAdapter extends ArrayAdapter<PlayerData> {
         TextView hGTime;
         TextView hScore;
         TextView hHit;
+        TextView hSessionPID;
     }
 
 
@@ -53,8 +54,9 @@ public class StatsListAdapter extends ArrayAdapter<PlayerData> {
         String time = getItem(position).getGTime();
         String score = getItem(position).getScore();
         String hit = getItem(position).getHits();
+        String sessionPID = getItem(position).getSessioPlayerID();
 
-        PlayerData playerData = new PlayerData(id,date,time,score,hit);
+        PlayerData playerData = new PlayerData(id,date,time,score,hit,sessionPID);
 
         ViewHolder holder;
 
@@ -69,6 +71,7 @@ public class StatsListAdapter extends ArrayAdapter<PlayerData> {
             holder.hGTime = convertView.findViewById(R.id.gTimeTextView);
             holder.hScore = convertView.findViewById(R.id.scoreTextView);
             holder.hHit = convertView.findViewById(R.id.hitTextView);
+            holder.hSessionPID = convertView.findViewById(R.id.sessionPlayerIDTextView);
 
             convertView.setTag(holder);
         }
@@ -82,6 +85,7 @@ public class StatsListAdapter extends ArrayAdapter<PlayerData> {
         holder.hGTime.setText(playerData.getGTime());
         holder.hScore.setText(playerData.getScore());
         holder.hHit.setText(playerData.getHits());
+        holder.hSessionPID.setText(playerData.getSessioPlayerID());
 
         return convertView;
 

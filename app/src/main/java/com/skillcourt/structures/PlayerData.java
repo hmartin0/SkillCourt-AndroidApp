@@ -6,13 +6,15 @@ public class PlayerData {
     private String GTime;
     private String Score;
     private String Hits;
+    private String SessioPlayerID;
 
-    public PlayerData(String id, String date, String gTime, String score, String hits) {
+    public PlayerData(String id, String date, String gTime, String score, String hits, String sessionPlayerID) {
         Id = id;
         Date = date;
         GTime = gTime;
         Score = score;
         Hits = hits;
+        SessioPlayerID = sessionPlayerID;
     }
 
     public String getId() {
@@ -53,5 +55,13 @@ public class PlayerData {
 
     public void setHits(String hits) {
         Hits = hits;
+    }
+
+    public String getSessioPlayerID() {
+        return SessioPlayerID;
+    }
+
+    public void setSessioPlayerID(String sessioPlayerID) {
+        SessioPlayerID = sessioPlayerID;
     }
 }

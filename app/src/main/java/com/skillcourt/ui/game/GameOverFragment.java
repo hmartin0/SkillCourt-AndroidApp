@@ -133,7 +133,6 @@ public class GameOverFragment extends NonBottomNavigationFragments {
 
         hit = (int) ((double) testHit / (testHit + testMiss) * 100);
         miss = (int) ((double) testMiss / (testHit + testMiss) * 100);
-        //System.out.println("Hello");
         Log.i("GameOverActivity", "Hit: " + hit + "%" + " Miss: " + miss + "%");
 
         mCircleView = view.findViewById(R.id.game_over_progress);
@@ -182,9 +181,6 @@ public class GameOverFragment extends NonBottomNavigationFragments {
         SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yy");
         dateOutput = dateFormat.format(calendar.getTime());
 
-        //Add data to the database *******************************************************
-        addPlayerData(dateOutput, ""+mTime.getText(), ""+totalPoints, ""+(testHit + "/" + (testHit + testMiss)));
-        //Add data to the database *******************************************************
 
         // Save data to database
         saveDataButton.setOnClickListener(new View.OnClickListener() {
@@ -305,7 +301,6 @@ public class GameOverFragment extends NonBottomNavigationFragments {
             }
         });
 
-        //ADD EXCEPTION OF NOT CREATE NEW SESSION IF IS ALREADY IN LIST
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
         alertDialogBuilder.setView(view);
@@ -319,18 +314,15 @@ public class GameOverFragment extends NonBottomNavigationFragments {
                                 String value = userInput.getText().toString();
                                 int sessionID = Integer.parseInt(value);
 
-                                Cursor resSessionID = mainActivity.myDB.getSessionID(value);
+                                Cursor resSessionID = mainActivity.myDB.getAllSessionID(value);
                                 if(resSessionID.getCount() == 0)
                                 {
-                                    //Toast.makeText(getActivity(), "Session Not in Database", Toast.LENGTH_SHORT).show();
                                     addSessionData(sessionID, dateOutput);
                                 }
-                                else
-                                {
-                                    Toast.makeText(getActivity(), "Session In Database!", Toast.LENGTH_SHORT).show();
-                                }
+                                //Add data stats to the database *******************************************************
+                                addPlayerData(dateOutput, ""+mTime.getText(), ""+totalPoints, ""+(testHit + "/" + (testHit + testMiss)), sessionID);
 
-                                //saveDataButton.setEnabled(false);
+                                saveDataButton.setEnabled(false);
                             }
                         })
                 .setNegativeButton("Cancel",
@@ -361,9 +353,9 @@ public class GameOverFragment extends NonBottomNavigationFragments {
     }
 
 
-    public void addPlayerData(String date, String time, String score, String hit)
+    public void addPlayerData(String date, String time, String score, String hit, Integer session_ID)
     {
-        boolean isInserted = mainActivity.myDB.insertData(date,time,score,hit);
+        boolean isInserted = mainActivity.myDB.insertData(date,time,score,hit,session_ID);
 
         if(isInserted == true)
         {
