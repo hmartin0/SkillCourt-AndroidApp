@@ -27,6 +27,7 @@ public class StatsListAdapter extends ArrayAdapter<PlayerData> {
         TextView hScore;
         TextView hHit;
         TextView hSessionPID;
+        TextView hNotes;
     }
 
 
@@ -44,6 +45,10 @@ public class StatsListAdapter extends ArrayAdapter<PlayerData> {
         notifyDataSetChanged();
     }
 
+    public void updateData()
+    {
+        notifyDataSetChanged();
+    }
 
     @NonNull
     @Override
@@ -55,8 +60,9 @@ public class StatsListAdapter extends ArrayAdapter<PlayerData> {
         String score = getItem(position).getScore();
         String hit = getItem(position).getHits();
         String sessionPID = getItem(position).getSessioPlayerID();
+        String notes = getItem(position).getNotes();
 
-        PlayerData playerData = new PlayerData(id,date,time,score,hit,sessionPID);
+        PlayerData playerData = new PlayerData(id,date,time,score,hit,sessionPID,notes);
 
         ViewHolder holder;
 
@@ -72,6 +78,7 @@ public class StatsListAdapter extends ArrayAdapter<PlayerData> {
             holder.hScore = convertView.findViewById(R.id.scoreTextView);
             holder.hHit = convertView.findViewById(R.id.hitTextView);
             holder.hSessionPID = convertView.findViewById(R.id.sessionPlayerIDTextView);
+            holder.hNotes = convertView.findViewById(R.id.noteTextView);
 
             convertView.setTag(holder);
         }
@@ -86,6 +93,7 @@ public class StatsListAdapter extends ArrayAdapter<PlayerData> {
         holder.hScore.setText(playerData.getScore());
         holder.hHit.setText(playerData.getHits());
         holder.hSessionPID.setText(playerData.getSessioPlayerID());
+        holder.hNotes.setText(playerData.getNotes());
 
         return convertView;
 

@@ -285,6 +285,7 @@ public class GameOverFragment extends NonBottomNavigationFragments {
 
         final ListView gamePromptListView = view.findViewById(R.id.prompListView);
         final EditText userInput = view.findViewById(R.id.editTextDialogUserInput);
+        final EditText noteInput = view.findViewById(R.id.notesTextUserInput);
         sessionList = new ArrayList<>();
         sessionList = getSessionData();
 
@@ -312,6 +313,7 @@ public class GameOverFragment extends NonBottomNavigationFragments {
                             public void onClick(DialogInterface dialog,int id) {
 
                                 String value = userInput.getText().toString();
+                                String note = noteInput.getText().toString();
                                 int sessionID = Integer.parseInt(value);
 
                                 Cursor resSessionID = mainActivity.myDB.getAllSessionID(value);
@@ -320,7 +322,12 @@ public class GameOverFragment extends NonBottomNavigationFragments {
                                     addSessionData(sessionID, dateOutput);
                                 }
                                 //Add data stats to the database *******************************************************
-                                addPlayerData(dateOutput, ""+mTime.getText(), ""+totalPoints, ""+(testHit + "/" + (testHit + testMiss)), sessionID);
+                                addPlayerData(dateOutput,
+                                        ""+mTime.getText(),
+                                        ""+totalPoints,
+                                        ""+(testHit + "/" + (testHit + testMiss)),
+                                        sessionID,
+                                        note);
 
                                 saveDataButton.setEnabled(false);
                             }
@@ -353,9 +360,9 @@ public class GameOverFragment extends NonBottomNavigationFragments {
     }
 
 
-    public void addPlayerData(String date, String time, String score, String hit, Integer session_ID)
+    public void addPlayerData(String date, String time, String score, String hit, Integer session_ID, String notes)
     {
-        boolean isInserted = mainActivity.myDB.insertData(date,time,score,hit,session_ID);
+        boolean isInserted = mainActivity.myDB.insertData(date,time,score,hit,session_ID, notes);
 
         if(isInserted == true)
         {

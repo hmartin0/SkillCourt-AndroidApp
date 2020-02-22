@@ -8,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.baoyz.swipemenulistview.SwipeMenu;
@@ -36,6 +38,7 @@ public class StatsFragment extends BaseFragment {
     StatsListAdapter playerAdapter;
     SessionListAdapter sessionAdapter;
     String myDeleteID;
+    Boolean noteClicked = true;
 
     public StatsFragment() {
         // Required empty public constructor
@@ -60,7 +63,6 @@ public class StatsFragment extends BaseFragment {
         /**************************************************************************/
         sessionDataItemsList = new ArrayList<>();
         sessionDataItemsList = getPlayerSessionData();
-
         sessionAdapter = new SessionListAdapter(getActivity(), R.layout.adapter_session_view_layout, sessionDataItemsList);
 
         user_stats_listView.setAdapter(sessionAdapter);
@@ -71,7 +73,7 @@ public class StatsFragment extends BaseFragment {
 
             @Override
             public void create(SwipeMenu menu) {
-                deleteTrashIcon(menu);
+                deleteTrashIcon(menu, 0);
             }
         };
 
@@ -112,29 +114,8 @@ public class StatsFragment extends BaseFragment {
                 getActivity().findViewById(R.id.dataListView).setVisibility(View.GONE);
                 getActivity().findViewById(R.id.playerDataListView).setVisibility(View.VISIBLE);
 
-                //Cursor playerRes = mainActivity.myDB.getAllPlayerData();
-                Cursor playerRes = mainActivity.myDB.getPlayerSessionDATA(getClickSessionID);
                 playerDataItemsList = new ArrayList<>();
-
-                if(playerRes.getCount() == 0)
-                {
-                    Toast.makeText(getActivity(), "No Save Data Has Been Added For this Session!", Toast.LENGTH_SHORT).show();
-                }
-
-                while(playerRes.moveToNext())
-                {
-                    String idStats = playerRes.getString(0);
-                    String dateStats = playerRes.getString(1);
-                    String gTimeStats = playerRes.getString(2);
-                    String scoreStats = playerRes.getString(3);
-                    String hitStats = playerRes.getString(4);
-                    String sessionPlayerIDStats = playerRes.getString(5);
-
-                    PlayerData stats = new PlayerData(idStats,dateStats,gTimeStats,scoreStats,hitStats, sessionPlayerIDStats);
-                    playerDataItemsList.add(stats);
-
-                }
-
+                playerDataItemsList = getSavedPlayerData(getClickSessionID);
                 playerAdapter = new StatsListAdapter(Objects.requireNonNull(getActivity()), R.layout.adapter_view_layout, playerDataItemsList);
 
                 player_stats_listView.setAdapter(playerAdapter);
@@ -144,7 +125,7 @@ public class StatsFragment extends BaseFragment {
 
                     @Override
                     public void create(SwipeMenu menu) {
-                        deleteTrashIcon(menu);
+                        deleteTrashIcon(menu , 1);
                     }
                 };
 
@@ -156,35 +137,64 @@ public class StatsFragment extends BaseFragment {
 
                         switch (index) {
                             case 0:
+                                updateNotesCase(position);
+                                break;
+                            case 1:
+                                    PlayerData content = playerDataItemsList.get(position);
 
-                                PlayerData content = playerDataItemsList.get(position);
+                                    String deleteID = content.getId();
+                                    //Delete from database
+                                    Integer deletedRows = mainActivity.myDB.deleteData(deleteID);
+                                    playerAdapter.myRemove(position);
 
-                                String deleteID = content.getId();
-                                //Delete from database
-                                Integer deletedRows = mainActivity.myDB.deleteData(deleteID);
-
-                                playerAdapter.myRemove(position);
-
-                                if(deletedRows > 0)
-                                {
-                                    Toast.makeText(getActivity(), "Player's Data Deleted!", Toast.LENGTH_SHORT).show();
-                                }
-                                else
-                                {
-                                    Toast.makeText(getActivity(), "Player's Data Not Deleted!", Toast.LENGTH_SHORT).show();
-                                }
+                                    if(deletedRows > 0) {
+                                        Toast.makeText(getActivity(), "Player's Data Deleted!", Toast.LENGTH_SHORT).show();
+                                    }
+                                    else {
+                                        Toast.makeText(getActivity(), "Player's Data Not Deleted!", Toast.LENGTH_SHORT).show();
+                                    }
 
                                 break;
                         }
                         return false;
                     }
                 });
+
+                player_stats_listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                        TextView noteTextView = view.findViewById(R.id.noteTextView);
+
+                        if(noteClicked){
+                            noteTextView.setMaxLines(Integer.MAX_VALUE);
+                            noteClicked = false;
+                        }
+                        else {
+                            noteTextView.setMaxLines(1);
+                            noteClicked = true;
+                        }
+                    }
+                });
             }
         });
     }
 
-    public void deleteTrashIcon(SwipeMenu menu)
+
+    public void deleteTrashIcon(SwipeMenu menu, int layout)
     {
+        if(layout == 1)
+        {
+            SwipeMenuItem editNotes = new SwipeMenuItem(
+                    mainActivity.getApplicationContext());
+
+            editNotes.setBackground(R.drawable.notebutton_bg);
+
+            editNotes.setWidth(200);
+            editNotes.setIcon(R.drawable.ic_edit_notes);
+
+            menu.addMenuItem(editNotes);
+        }
+
         SwipeMenuItem deleteItem = new SwipeMenuItem(
                 mainActivity.getApplicationContext());
 
@@ -219,6 +229,36 @@ public class StatsFragment extends BaseFragment {
         return tempList;
     }
 
+    public ArrayList<PlayerData> getSavedPlayerData(String getClSessionID)
+    {
+        //Cursor playerRes = mainActivity.myDB.getAllPlayerData();
+        Cursor playerRes = mainActivity.myDB.getPlayerSessionDATA(getClSessionID);
+        ArrayList<PlayerData> tempList = new ArrayList<>();
+
+        if(playerRes.getCount() == 0)
+        {
+            Toast.makeText(getActivity(), "No Save Data Has Been Added For Session! " + getClSessionID, Toast.LENGTH_SHORT).show();
+        }
+
+        while(playerRes.moveToNext())
+        {
+            String idStats = playerRes.getString(0);
+            String dateStats = playerRes.getString(1);
+            String gTimeStats = playerRes.getString(2);
+            String scoreStats = playerRes.getString(3);
+            String hitStats = playerRes.getString(4);
+            String sessionPlayerIDStats = playerRes.getString(5);
+            String noteStats = playerRes.getString(6);
+
+            PlayerData stats = new PlayerData(idStats,dateStats,gTimeStats,scoreStats,hitStats, sessionPlayerIDStats,noteStats);
+            tempList.add(stats);
+
+        }
+
+        return tempList;
+
+    }
+
     public void deleteSectionDialog(String deleteID)
     {
         myDeleteID = deleteID;
@@ -229,6 +269,7 @@ public class StatsFragment extends BaseFragment {
         myAlertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 
             public void onClick(DialogInterface arg0, int arg1) {
+
                 Integer data = mainActivity.myDB.deletePlayerInSessionData(myDeleteID);
                 Integer deletedRows = mainActivity.myDB.deleteSessionData(myDeleteID);
 
@@ -256,5 +297,58 @@ public class StatsFragment extends BaseFragment {
             public void onClick(DialogInterface arg0, int arg1) {
             }});
         myAlertDialog.show();
+    }
+
+    public void updateNotesCase(int position)
+    {
+        final PlayerData playerContent = playerDataItemsList.get(position);
+        String myNotes = playerContent.getNotes();
+
+        View pView =(LayoutInflater.from(getActivity()).inflate(R.layout.prompts_note, null));
+        final EditText userNotes = pView.findViewById(R.id.editNotesEditText);
+        userNotes.setText(myNotes);
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+        alertDialogBuilder.setView(pView);
+
+        alertDialogBuilder
+                .setCancelable(false)
+                .setPositiveButton("OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog,int id) {
+                                String newNotes = userNotes.getText().toString();
+
+                                Boolean updated = mainActivity.myDB.updatePlayerNotes(playerContent.getId(),
+                                        playerContent.getDate(),
+                                        playerContent.getGTime(),
+                                        playerContent.getScore(),
+                                        playerContent.getHits(),
+                                        playerContent.getSessioPlayerID(),
+                                        newNotes);
+
+                                playerContent.setNotes(newNotes);
+                                playerAdapter.updateData();
+
+                                if(updated == true)
+                                {
+                                    Toast.makeText(getActivity(), "Notes Updated", Toast.LENGTH_SHORT).show();
+                                }
+                                else
+                                {
+                                    Toast.makeText(getActivity(), "Notes Not Updated", Toast.LENGTH_SHORT).show();
+                                }
+
+                            }
+                        })
+                .setNegativeButton("Cancel",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog,int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+
+        alertDialog.show();
     }
 }

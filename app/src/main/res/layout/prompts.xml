@@ -28,8 +28,16 @@
         android:id="@+id/prompListView"
         android:layout_marginTop="5dp"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="140dp"
         android:dividerHeight="3dp"
         android:divider="@color/colorButtonText"/>
+
+    <EditText
+        android:id="@+id/notesTextUserInput"
+        android:hint="Notes"
+        android:layout_marginTop="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="100dp">
+    </EditText>
 
 </LinearLayout>
