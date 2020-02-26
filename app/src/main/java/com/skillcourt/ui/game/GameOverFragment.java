@@ -241,15 +241,15 @@ public class GameOverFragment extends NonBottomNavigationFragments {
             int minute = (int) seconds / 60;
             seconds = seconds % 60;
             if (seconds < 10) {
-                mTime.setText(minute + ":0" + seconds);
+                mTime.setText(minute + ":0" + seconds + ":00");
             } else {
-                mTime.setText(minute + ":" + seconds);
+                mTime.setText(minute + ":" + seconds + ":00");
             }
         } else {
             if (seconds < 10) {
-                mTime.setText("00:0" + seconds);
+                mTime.setText("00:0" + seconds +":00");
             } else {
-                mTime.setText("00:" + seconds);
+                mTime.setText("00:" + seconds+":00");
             }
         }
     }
@@ -311,25 +311,41 @@ public class GameOverFragment extends NonBottomNavigationFragments {
                 .setPositiveButton("OK",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog,int id) {
-
-                                String value = userInput.getText().toString();
-                                String note = noteInput.getText().toString();
-                                int sessionID = Integer.parseInt(value);
-
-                                Cursor resSessionID = mainActivity.myDB.getAllSessionID(value);
-                                if(resSessionID.getCount() == 0)
+                                try
                                 {
-                                    addSessionData(sessionID, dateOutput);
-                                }
-                                //Add data stats to the database *******************************************************
-                                addPlayerData(dateOutput,
-                                        ""+mTime.getText(),
-                                        ""+totalPoints,
-                                        ""+(testHit + "/" + (testHit + testMiss)),
-                                        sessionID,
-                                        note);
+                                    String value = userInput.getText().toString();
+                                    String note = noteInput.getText().toString();
+                                    int sessionID = Integer.parseInt(value);
 
-                                saveDataButton.setEnabled(false);
+                                    if(sessionID >= 0 && sessionID <= 99999)
+                                    {
+                                        Cursor resSessionID = mainActivity.myDB.getAllSessionID(value);
+                                        if(resSessionID.getCount() == 0)
+                                        {
+                                            addSessionData(sessionID, dateOutput);
+                                        }
+                                        //Add data stats to the database *******************************************************
+                                        addPlayerData(dateOutput,
+                                                ""+mTime.getText(),
+                                                ""+totalPoints,
+                                                ""+(testHit + "/" + (testHit + testMiss)),
+                                                sessionID,
+                                                note);
+
+                                        saveDataButton.setEnabled(false);
+                                        saveDataButton.setTextColor(Color.parseColor("#1285ff"));
+                                        saveDataButton.setCompoundDrawablesWithIntrinsicBounds( 0, R.drawable.ic_save_blue_24dp, 0, 0);
+                                    }
+                                    else
+                                    {
+                                        Toast.makeText(getActivity(), "Choose or Create a New Session from 0-99999", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                                catch (Exception e)
+                                {
+                                    Toast.makeText(getActivity(), "Choose or Create Session", Toast.LENGTH_SHORT).show();
+                                }
+
                             }
                         })
                 .setNegativeButton("Cancel",

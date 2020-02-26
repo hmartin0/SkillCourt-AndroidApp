@@ -3,36 +3,7 @@
     xmlns:CircleProgressView="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background">
-
-    <TextView
-        android:id="@+id/game_over_hits"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_alignLeft="@+id/game_over_new_game_btn"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignStart="@+id/game_over_new_game_btn"
-        android:gravity="center"
-        android:text="Hits"
-        android:textAlignment="center"
-        android:textColor="?attr/colorPrimary"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/game_over_score"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_alignEnd="@+id/game_over_home_btn"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_alignRight="@+id/game_over_home_btn"
-        android:gravity="center"
-        android:text="Score"
-        android:textAlignment="center"
-        android:textColor="?attr/colorPrimary"
-        android:textSize="18sp" />
+    android:background="@drawable/background_gradient">
 
     <at.grabner.circleprogress.CircleProgressView
         android:id="@+id/game_over_progress"
@@ -58,90 +29,126 @@
         CircleProgressView:cpv_unitToTextScale="1"
         CircleProgressView:cpv_value="0" />
 
-    <Button
-        android:id="@+id/game_over_play_again_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="16dp"
-        android:background="@drawable/home_play_color"
-        android:text="Play Again"
-        android:textAlignment="center"
-        android:textColor="@color/colorButtonText" />
-
-    <Button
-        android:id="@+id/save_data_button"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/game_over_play_again_btn"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="15dp"
-        android:background="@drawable/home_play_color"
-        android:text="Save Score"
-        android:textAlignment="center"
-        android:textColor="@color/colorButtonText" />
-
-    <Button
-        android:id="@+id/game_over_home_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"
-        android:background="@drawable/home_play_color"
-        android:text="Home"
-        android:textAlignment="center"
-        android:textColor="@color/colorButtonText" />
-
-    <Button
-        android:id="@+id/game_over_new_game_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:background="@drawable/home_play_color"
-        android:text="New Game"
-        android:textAlignment="center"
-        android:textColor="@color/colorButtonText" />
-
-
-    <TextView
-        android:id="@+id/game_over_mode"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/game_over_time"
-        android:layout_alignParentTop="true"
-        android:layout_toEndOf="@+id/game_over_score"
-        android:layout_toLeftOf="@+id/game_over_hits"
-        android:layout_toRightOf="@+id/game_over_score"
-        android:layout_toStartOf="@+id/game_over_hits"
-        android:gravity="center"
-        android:text="SEQUENCE"
-        android:textAlignment="center"
-        android:textColor="#f20707"
-        android:textSize="20sp" />
 
     <TextView
         android:id="@+id/game_over_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/game_over_hits"
-        android:layout_toEndOf="@+id/game_over_score"
-        android:layout_toLeftOf="@+id/game_over_hits"
-        android:layout_toRightOf="@+id/game_over_score"
-        android:layout_toStartOf="@+id/game_over_hits"
+        android:layout_below="@+id/game_over_linearLayout1"
+        android:layout_centerHorizontal="true"
         android:gravity="center"
-        android:text="0:00"
+        android:text="00:00:00"
+        android:fontFamily="@font/regular"
         android:textAlignment="center"
         android:textColor="@color/colorPrimary"
-        android:textSize="35sp" />
+        android:textSize="50sp" />
+
+    <LinearLayout
+        android:id="@+id/game_over_linearLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:animateLayoutChanges="true"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:weightSum="100">
+
+        <TextView
+            android:id="@+id/game_over_hits"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="33"
+            android:gravity="center"
+            android:text="Hits"
+            android:textAlignment="center"
+            android:fontFamily="@font/regular"
+            android:textColor="@color/colorPrimary"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/game_over_mode"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="33"
+            android:gravity="center"
+            android:fontFamily="@font/regular"
+            android:text="SEQUENCE"
+            android:textAlignment="center"
+            android:textColor="#f20707"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/game_over_score"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="32"
+            android:fontFamily="@font/regular"
+            android:gravity="center"
+            android:text="Score"
+            android:textAlignment="center"
+            android:textColor="@color/colorPrimary"
+            android:textSize="20sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:paddingBottom="10dp"
+        android:weightSum="100">
+
+        <Button
+            android:id="@+id/game_over_home_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="25"
+            android:background="#00000000"
+            android:fontFamily="@font/regular"
+            android:text="Home"
+            android:drawableTop="@drawable/ic_home_green_24dp"
+            android:textAlignment="center"
+            android:textColor="@color/buttonGreen" />
+
+        <Button
+            android:id="@+id/game_over_new_game_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="25"
+            android:background="#00000000"
+            android:drawableTop="@drawable/ic_games_green_24dp"
+            android:fontFamily="@font/regular"
+            android:text="New Game"
+            android:textAlignment="center"
+            android:textColor="@color/buttonGreen" />
+
+        <Button
+            android:id="@+id/game_over_play_again_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="25"
+            android:background="#00000000"
+            android:fontFamily="@font/regular"
+            android:drawableTop="@drawable/ic_play_circle_outline_green_24dp"
+            android:text="Play Again"
+            android:textAlignment="center"
+            android:textColor="@color/buttonGreen" />
+
+        <Button
+            android:id="@+id/save_data_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="25"
+            android:fontFamily="@font/regular"
+            android:background="#00000000"
+            android:drawableTop="@drawable/ic_save_green_24dp"
+            android:text="Save"
+            android:textAlignment="center"
+            android:textColor="@color/buttonGreen"/>
+
+    </LinearLayout>
 
 </RelativeLayout>

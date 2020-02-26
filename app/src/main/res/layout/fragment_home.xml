@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background"
+    android:background="@drawable/background_gradient"
     tools:context=".ui.main.HomeFragment">
 
     <android.support.design.widget.CoordinatorLayout
@@ -19,9 +19,11 @@
                 android:id="@+id/playButton"
                 android:layout_width="220dp"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/regular"
                 android:layout_above="@id/pad_settings"
                 android:background="@drawable/home_play_color"
                 android:textColor="@color/colorButtonText"
+                android:textSize="15dp"
                 android:layout_centerHorizontal="true"
                 android:text="Play" />
 
@@ -32,6 +34,8 @@
                 android:layout_centerInParent="true"
                 android:background="@drawable/home_play_color"
                 android:textColor="@color/colorButtonText"
+                android:fontFamily="@font/regular"
+                android:textSize="15dp"
                 android:layout_marginTop="25dp"
                 android:layout_marginBottom="25dp"
                 android:text="Pad Settings" />

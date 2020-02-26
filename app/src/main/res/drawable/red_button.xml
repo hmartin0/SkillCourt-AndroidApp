@@ -3,8 +3,8 @@
     <item android:state_pressed="false" >
         <shape>
             <gradient
-                android:startColor="#42f5bc"
-                android:endColor="@color/buttonGreen"
+                android:startColor="#ff8282"
+                android:endColor="@color/buttonRed"
                 android:angle="45"
                 />
             <corners android:radius="200dp" />
@@ -14,7 +14,7 @@
         <shape>
             <stroke
                 android:width="5px"
-                android:color="@color/buttonGreen" />
+                android:color="@color/buttonRed" />
             <corners android:radius="200dp" />
         </shape>
     </item>

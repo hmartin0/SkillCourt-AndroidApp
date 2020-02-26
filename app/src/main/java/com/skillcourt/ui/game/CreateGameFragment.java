@@ -123,9 +123,15 @@ public class CreateGameFragment extends NonBottomNavigationFragments {
         mPlayGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                if(byHits)
+                {
+                    mGameMinutes = 0;
+                    mGameSeconds = 0;
+                }
+
                 Log.i(TAG, "Minutes: " + mGameMinutes);
                 Log.i(TAG, "Seconds: " + mGameSeconds);
-
 
                 String padLightUpTime =  padLightUp.getText().toString();
                 String padLightUpTimeDelay =  padLightUpDelay.getText().toString();
@@ -174,6 +180,7 @@ public class CreateGameFragment extends NonBottomNavigationFragments {
                     if(mGamePlayers == 2 ){
                         mGameType = "Duo";
                     }
+
                     bundle.putString("GAME_TYPE", mGameType);
                     bundle.putLong("GAME_TIME", gameTimeFinal);
                     bundle.putDouble("PAD_LIGHT_UP_TIME", mPadLightUpTime);

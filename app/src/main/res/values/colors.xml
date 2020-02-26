@@ -6,12 +6,14 @@
     <color name="colorPrimaryDark">#388E3C</color>
     <color name="colorAccent">#536dfe</color>
     <color name="buttonGreen">#5fce5d</color>
+    <color name="buttonRed">#f20707</color>
     <color name="toolbarColor">#1285ff</color>
 
     <color name="colorContainer">#f5f9ff</color>
     <color name="colorCenter">#4caf50</color>
     <color name="colorStart">#388e3c</color>
-    <color name="background">#e6e9ed</color>
+    <color name="background">#ffffff</color>
+    <color name="endcolor">#c7e1ff</color>
     <color name="colorBlueLight">#42bcf4</color>
     <color name="colorOrange">#ff5930</color>
 

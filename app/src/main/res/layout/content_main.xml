@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background"
+    android:background="@drawable/background_gradient"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".ui.main.MainActivity"
     tools:showIn="@layout/app_bar_main">
@@ -23,7 +23,7 @@
         android:layout_height="56dp"
         android:layout_marginEnd="0dp"
         android:layout_marginStart="0dp"
-        android:background="@color/colorContainer"
+        android:background="@color/background"
         app:itemIconTint="@drawable/nav_button_click"
         app:itemTextColor="@drawable/nav_button_click"
         app:layout_constraintBottom_toBottomOf="parent"

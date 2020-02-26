@@ -4,15 +4,15 @@
     android:id="@+id/game_frag"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background"
+    android:background="@drawable/background_gradient"
     android:keepScreenOn="true">
 
 
     <ProgressBar
         android:id="@+id/progressBarCircle"
         style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="366dp"
-        android:layout_height="329dp"
+        android:layout_width="match_parent"
+        android:layout_height="380dp"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:indeterminate="false"
@@ -20,9 +20,6 @@
         android:progress="100"
         android:progressDrawable="@drawable/drawable_circle"
         android:rotation="-90"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -30,14 +27,30 @@
         android:id="@+id/tvTimer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="73dp"
-        android:background="@color/background"
-        android:text="00:00"
+        android:layout_marginTop="136dp"
+        android:fontFamily="@font/regular"
+        android:text="00:00:00"
         android:textColor="@color/colorPrimary"
         android:textSize="60sp"
         app:layout_constraintEnd_toStartOf="@+id/guideline15"
+        app:layout_constraintHorizontal_bias="0.504"
         app:layout_constraintStart_toStartOf="@+id/guideline15"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/playerCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="168dp"
+        android:layout_marginTop="20dp"
+        android:text="Player 1"
+        android:textColor="@color/toolbarColor"
+        android:fontFamily="@font/regular"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/guideline15"
+        app:layout_constraintEnd_toStartOf="@+id/guideline15"
+        app:layout_constraintTop_toBottomOf="@+id/tvTimer" />
 
     <TextView
         android:id="@+id/countDown"
@@ -50,6 +63,7 @@
         android:text="5"
         android:textColor="@color/colorPrimary"
         android:textSize="100sp"
+        android:fontFamily="@font/regular"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
@@ -60,143 +74,153 @@
         android:id="@+id/guideline14"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="24dp"
         android:orientation="horizontal"
-        app:layout_constraintEnd_toStartOf="@+id/progressBarCircle"
-        app:layout_constraintGuide_percent="0.5"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintGuide_percent="0.5" />
 
-    <!--<GridView-->
-    <!--android:id="@+id/padGameGridView"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="0dp"-->
-    <!--android:gravity="center"-->
-    <!--android:horizontalSpacing="5dp"-->
-    <!--android:verticalSpacing="30dp"-->
-    <!--app:layout_constraintBottom_toBottomOf="parent"-->
-    <!--app:layout_constraintEnd_toEndOf="parent"-->
-    <!--app:layout_constraintHorizontal_bias="0.0"-->
-    <!--app:layout_constraintStart_toStartOf="parent"-->
-    <!--app:layout_constraintTop_toTopOf="@+id/guideline14"-->
-    <!--app:layout_constraintVertical_bias="0.0" />-->
-
-    <TextView
-        android:id="@+id/gameMode"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        android:text="GAME MODE"
-        android:textColor="#f20707"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/tvTimer"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+    <LinearLayout
+        android:id="@+id/start_game_linear"
+        android:layout_width="match_parent"
+        android:layout_height="350dp"
+        android:animateLayoutChanges="true"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.743" />
+        app:layout_constraintTop_toBottomOf="@+id/progressBarCircle">
 
-    <TextView
-        android:id="@+id/playerCount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Player 1"
-        android:textColor="@color/toolbarColor"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/progressBarCircle"
-        app:layout_constraintEnd_toStartOf="@+id/guideline15"
-        app:layout_constraintHorizontal_bias="0.513"
-        app:layout_constraintStart_toStartOf="@+id/guideline15"
-        app:layout_constraintTop_toTopOf="@+id/progressBarCircle"
-        app:layout_constraintVertical_bias="0.231" />
+        <LinearLayout
+            android:id="@+id/start_game_linear2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:animateLayoutChanges="true"
+            android:background="@drawable/game_borders"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingBottom="10dp"
+            android:weightSum="100">
 
-    <TextView
-        android:id="@+id/hitText"
-        android:layout_width="86dp"
-        android:layout_height="40dp"
-        android:background="@drawable/custom_textborder"
-        android:gravity="center"
-        android:text="HIT"
-        android:textColor="@color/colorButtonText"
-        android:textSize="20dp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@+id/hitCount"
-        app:layout_constraintTop_toBottomOf="@+id/hitCount" />
+            <TextView
+                android:id="@+id/gameMode"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="100"
+                android:gravity="center"
+                android:text="GAME MODE"
+                android:textAlignment="center"
+                android:textColor="@color/buttonRed"
+                android:textSize="23sp"
+                android:fontFamily="@font/regular"/>
 
-    <TextView
-        android:id="@+id/missCount"
-        android:layout_width="87dp"
-        android:layout_height="69dp"
-        android:layout_marginTop="120dp"
-        android:layout_marginEnd="44dp"
-        android:elevation="4dp"
-        android:gravity="center"
-        android:text="0"
-        android:textColor="@color/colorPrimary"
-        android:textSize="25dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline14" />
+        </LinearLayout>
 
-    <TextView
-        android:id="@+id/hitCount"
-        android:layout_width="87dp"
-        android:layout_height="69dp"
-        android:layout_marginStart="44dp"
-        android:layout_marginTop="120dp"
-        android:elevation="4dp"
-        android:gravity="center"
-        android:text="0"
-        android:textColor="@color/colorPrimary"
-        android:textSize="25dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline14" />
+        <LinearLayout
+            android:id="@+id/start_game_linear3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:animateLayoutChanges="true"
+            android:background="@drawable/custom_textborder"
+            android:orientation="horizontal"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:weightSum="100">
 
-    <TextView
-        android:id="@+id/missText"
-        android:layout_width="87dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="40dp"
-        android:background="@drawable/custom_textborder2"
-        android:gravity="center"
-        android:text="MISS"
-        android:textColor="@color/colorButtonText"
-        android:textSize="20dp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="@+id/missCount"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@+id/hitText"
-        app:layout_constraintTop_toBottomOf="@+id/missCount" />
+            <TextView
+                android:id="@+id/hitText"
+                android:layout_width="49dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="49"
+                android:gravity="center"
+                android:paddingLeft="20dp"
+                android:fontFamily="@font/regular"
+                android:text="HIT"
+                android:textColor="@color/colorPrimary"
+                android:textSize="20dp" />
 
-    <TextView
-        android:id="@+id/scoreCountLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+            <TextView
+                android:id="@+id/hitCount"
+                android:layout_width="49dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="49"
+                android:gravity="center"
+                android:fontFamily="@font/regular"
+                android:paddingRight="20dp"
+                android:text="0"
+                android:textColor="@color/colorPrimary"
+                android:textSize="25dp"
+                tools:layout_editor_absoluteX="44dp"
+                tools:layout_editor_absoluteY="486dp" />
 
-        android:text="SCORE:"
-        android:textColor="@color/colorPrimary"
-        android:textSize="30dp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline14"
-        app:layout_constraintEnd_toEndOf="@+id/progressBarCircle"
-        app:layout_constraintHorizontal_bias="0.358"
-        app:layout_constraintStart_toStartOf="@+id/progressBarCircle"
-        app:layout_constraintTop_toTopOf="@+id/guideline14"
-        app:layout_constraintVertical_bias="0.512" />
+        </LinearLayout>
 
-    <TextView
-        android:id="@+id/scoreCount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:text="0"
-        android:textColor="@color/toolbarColor"
-        android:textSize="30dp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline14"
-        app:layout_constraintStart_toEndOf="@+id/scoreCountLabel"
-        app:layout_constraintTop_toTopOf="@+id/guideline14"
-        app:layout_constraintVertical_bias="0.512" />
+        <LinearLayout
+            android:id="@+id/start_game_linear4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:animateLayoutChanges="true"
+            android:background="@drawable/custom_textborder2"
+            android:orientation="horizontal"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:weightSum="100">
+
+            <TextView
+                android:id="@+id/missText"
+                android:layout_width="49dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/regular"
+                android:layout_weight="49"
+                android:gravity="center"
+                android:paddingLeft="20dp"
+                android:text="MISS"
+                android:textColor="@color/colorPrimary"
+                android:textSize="20dp" />
+
+            <TextView
+                android:id="@+id/missCount"
+                android:layout_width="49dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="49"
+                android:gravity="center"
+                android:fontFamily="@font/regular"
+                android:paddingRight="20dp"
+                android:text="0"
+                android:textColor="@color/colorPrimary"
+                android:textSize="25dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/start_game_linear5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:animateLayoutChanges="true"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingTop="1dp"
+            android:paddingBottom="1dp">
+
+            <TextView
+                android:id="@+id/scoreCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textAlignment="center"
+                android:fontFamily="@font/regular"
+                android:textColor="@color/toolbarColor"
+                android:textSize="60dp" />
+
+            <TextView
+                android:id="@+id/scoreCountLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="SCORE"
+                android:textAlignment="center"
+                android:fontFamily="@font/regular"
+                android:textColor="@color/colorPrimary"
+                android:textSize="13dp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline15"
@@ -213,3 +237,4 @@
         app:layout_constraintGuide_begin="20dp" />
 
 </android.support.constraint.ConstraintLayout>
+

@@ -38,6 +38,7 @@ public class StatsFragment extends BaseFragment {
     StatsListAdapter playerAdapter;
     SessionListAdapter sessionAdapter;
     String myDeleteID;
+    int sessDeletePosition;
     Boolean noteClicked = true;
 
     public StatsFragment() {
@@ -91,8 +92,7 @@ public class StatsFragment extends BaseFragment {
                         String deleteID = content.getSessionID();
 
                         //Delete from database
-                        deleteSectionDialog(deleteID);
-                        sessionAdapter.myRemove(position);
+                        deleteSectionDialog(deleteID, position);
 
                         break;
                 }
@@ -259,9 +259,10 @@ public class StatsFragment extends BaseFragment {
 
     }
 
-    public void deleteSectionDialog(String deleteID)
+    public void deleteSectionDialog(String deleteID, int position)
     {
         myDeleteID = deleteID;
+        sessDeletePosition = position;
 
         AlertDialog.Builder myAlertDialog = new AlertDialog.Builder(getActivity());
         myAlertDialog.setTitle("WARNING! Deleting Session: " + myDeleteID );
@@ -272,6 +273,7 @@ public class StatsFragment extends BaseFragment {
 
                 Integer data = mainActivity.myDB.deletePlayerInSessionData(myDeleteID);
                 Integer deletedRows = mainActivity.myDB.deleteSessionData(myDeleteID);
+                sessionAdapter.myRemove(sessDeletePosition);
 
                 if(data > 0)
                 {
