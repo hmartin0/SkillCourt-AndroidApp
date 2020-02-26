@@ -59,7 +59,6 @@ public class HomeFragment extends BaseFragment {
         padSettingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                System.out.println("HERE!");
                 mainActivity.padClickerHelper();
             }
         });

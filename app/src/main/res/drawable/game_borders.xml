@@ -10,7 +10,7 @@
                 android:width="0.1dp"
                 android:color="@color/toolbarColor" />
 
-            <solid android:color="#1F5fce5d" />
+            <solid android:color="#00FFFFFF" />
 
             <padding android:left="10dp"
                 android:right="10dp"

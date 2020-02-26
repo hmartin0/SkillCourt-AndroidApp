@@ -10,6 +10,7 @@
         android:id="@+id/promptTextViewTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/regular"
         android:textAlignment="center"
         android:text="Create or Save to Session: "
         android:textAppearance="?android:attr/textAppearanceLarge" />
@@ -17,6 +18,7 @@
     <EditText
         android:id="@+id/editTextDialogUserInput"
         android:layout_width="match_parent"
+        android:fontFamily="@font/regular"
         android:layout_height="wrap_content"
         android:inputType="number">
 
@@ -28,8 +30,18 @@
         android:id="@+id/prompListView"
         android:layout_marginTop="5dp"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:fontFamily="@font/regular"
+        android:layout_height="140dp"
         android:dividerHeight="3dp"
         android:divider="@color/colorButtonText"/>
+
+    <EditText
+        android:id="@+id/notesTextUserInput"
+        android:hint="Notes"
+        android:layout_marginTop="5dp"
+        android:fontFamily="@font/regular"
+        android:layout_width="match_parent"
+        android:layout_height="100dp">
+    </EditText>
 
 </LinearLayout>

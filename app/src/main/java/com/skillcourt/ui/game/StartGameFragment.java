@@ -22,6 +22,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.ProgressBar;
 
@@ -86,6 +87,7 @@ public class StartGameFragment extends NonBottomNavigationFragments {
     private Bundle bundle;
     private Player mPlayer;
     private ProgressBar progressBarCircle;
+    private LinearLayout start_game_lin1, start_game_lin2, start_game_lin3, start_game_lin4,start_game_lin5;
 
     ServiceConnection mGameConnection = new ServiceConnection() {
         @Override
@@ -313,6 +315,12 @@ public class StartGameFragment extends NonBottomNavigationFragments {
         hText = view.findViewById(R.id.hitText);
         mText= view.findViewById(R.id.missText);
         progressBarCircle = view.findViewById(R.id.progressBarCircle);
+        start_game_lin1 = view.findViewById(R.id.start_game_linear);
+        start_game_lin2 = view.findViewById(R.id.start_game_linear2);
+        start_game_lin3 = view.findViewById(R.id.start_game_linear3);
+        start_game_lin4 = view.findViewById(R.id.start_game_linear4);
+        start_game_lin5 = view.findViewById(R.id.start_game_linear5);
+
        /*
         mPlayerViewAdapter = new PlayerViewAdapter(getContext(), mPlayerCount);
         mGridView = view.findViewById(R.id.padGameGridView);
@@ -330,12 +338,17 @@ public class StartGameFragment extends NonBottomNavigationFragments {
         hText.setVisibility(View.INVISIBLE);
         mText.setVisibility(View.INVISIBLE);
         progressBarCircle.setVisibility(View.INVISIBLE);
+        start_game_lin1.setVisibility(View.INVISIBLE);
+        start_game_lin2.setVisibility(View.INVISIBLE);
+        start_game_lin3.setVisibility(View.INVISIBLE);
+        start_game_lin4.setVisibility(View.INVISIBLE);
+        start_game_lin5.setVisibility(View.INVISIBLE);
 
         progressBarCircle.setMax((int) mGameTime);
         updateTimerText(mGameTime, -1);
         mPlayer = players.get(0);
         if (mByHits) {
-            mHitCount.setText(String.valueOf(mPlayer.getHitCount()) + "\n/" + mHitAmount);
+            mHitCount.setText(String.valueOf(mPlayer.getHitCount()) + "/" + mHitAmount);
         }
 
         mGameModeTv.setText(mGameMode);
@@ -364,6 +377,7 @@ public class StartGameFragment extends NonBottomNavigationFragments {
 
     private void updateTimerText(long seconds, int milliseconds) {
         String time;
+        String milliFormat;
 
         if(milliseconds == -2)
         {
@@ -374,19 +388,27 @@ public class StartGameFragment extends NonBottomNavigationFragments {
         // print for milliseconds on the layout
         if (milliseconds != -1)
         {
+            if(milliseconds >= 0 && milliseconds <= 9)
+            {
+                milliFormat = ":0" + milliseconds;
+            }
+            else
+            {
+                milliFormat = ":" + milliseconds;
+            }
             if (seconds >= 60) {
                 int minute = (int) seconds / 60;
                 seconds = seconds % 60;
                 if (seconds < 10) {
-                    time = minute + ":0" + seconds + ":" + milliseconds;
+                    time = minute + ":0" + seconds + milliFormat;
                 } else {
-                    time = minute + ":" + seconds + ":" + milliseconds;
+                    time = minute + ":" + seconds + milliFormat;
                 }
             } else {
                 if (seconds < 10) {
-                    time = "00:0" + seconds + ":" + milliseconds;
+                    time = "00:0" + seconds + milliFormat;
                 } else {
-                    time = "00:" + seconds + ":" + milliseconds;
+                    time = "00:" + seconds + milliFormat;
                 }
             }
 
@@ -411,7 +433,6 @@ public class StartGameFragment extends NonBottomNavigationFragments {
             }
         }
 
-
         mTimer.setText(time);
         mGameTimeString = time;
     }
@@ -432,6 +453,11 @@ public class StartGameFragment extends NonBottomNavigationFragments {
                     hText.setVisibility(View.VISIBLE);
                     mText.setVisibility(View.VISIBLE);
                     progressBarCircle.setVisibility(View.VISIBLE);
+                    start_game_lin1.setVisibility(View.VISIBLE);
+                    start_game_lin2.setVisibility(View.VISIBLE);
+                    start_game_lin3.setVisibility(View.VISIBLE);
+                    start_game_lin4.setVisibility(View.VISIBLE);
+                    start_game_lin5.setVisibility(View.VISIBLE);
 
                     //mGridView.setVisibility(View.VISIBLE);
                 }
@@ -451,7 +477,7 @@ public class StartGameFragment extends NonBottomNavigationFragments {
                         @Override
                         public void run() {
                             if (mByHits) {
-                                mHitCount.setText(String.valueOf(mPlayer.getHitCount()) + "\n/" + mHitAmount);
+                                mHitCount.setText(String.valueOf(mPlayer.getHitCount()) + "/" + mHitAmount);
                                 mMissCount.setText(String.valueOf(mPlayer.getMissCount()));
                             } else {
                                 mHitCount.setText(String.valueOf(mPlayer.getHitCount()));
