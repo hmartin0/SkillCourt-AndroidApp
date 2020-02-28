@@ -43,6 +43,9 @@ public class Game extends Thread {
             //sequence.getCurrentLitPad().turnOff();     //Once nessesary to end the game//
             //sequence.getCurrentLitPad().endGame();
             pad.turnOff();
+            while(pad.get_off_confirmed() == false){
+
+            }
             pad.endGame();
             Log.i(TAG, "Sending game over");
         }
@@ -85,7 +88,13 @@ public class Game extends Thread {
             //if there was a light up time and it expired before the pad was hit then turn it off
             //since the pad only turns off if hit or when we tell it too
             if (!isHit) {
-                sequence.getCurrentLitPad().turnOff();
+                Pad temp = sequence.getCurrentLitPad();
+                temp.turnOff();
+                while(temp.get_off_confirmed() == false){
+
+                }
+                Log.i(TAG, "Confirmed off from Gamoe.java 9-9-9-9-9-9-9-9-9-9-9-9-9-9-9-9");
+                temp.set_off_confirmed();
                 for (Player player : getSequence().getPlayers()) {   //Added to keep track of Missed hits//
                     player.addMiss();
                     player.removePoints();

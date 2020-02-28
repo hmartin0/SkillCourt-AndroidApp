@@ -8,6 +8,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by Joshua Mclendon on 2/2/18.
@@ -25,6 +26,11 @@ public class Pad {
     private ConnectionService mConnectionService;
     private int CurrentStatus;
     private int Order;
+    private Thread main;
+    private AtomicInteger confirmTimer = new AtomicInteger(1);
+    private AtomicInteger game_started = new AtomicInteger(1);
+    private AtomicInteger off_confirmed = new AtomicInteger(0);
+
     //Timer variable
     //ReplyFlag
 
@@ -34,6 +40,7 @@ public class Pad {
     public Pad(Socket socket, ConnectionService connectionService) {
         mSocket = socket;
         mConnectionService = connectionService;
+        game_started.set(0);
     }
 
     public enum COMMANDS {
@@ -78,20 +85,67 @@ public class Pad {
     public void connect() {
         Log.i(TAG, "calling connect");
         Log.i(TAG, "getting buffer reader " + mSocket.isConnected());
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    mInput = new BufferedReader(new InputStreamReader(mSocket.getInputStream()));
-                    mOutput = new OutputStreamWriter(mSocket.getOutputStream(), "UTF-8");
-                    sendMessage(COMMANDS.CONNECT.getCommand());
-                    Log.i(TAG, "starting thread connect " + mSocket.isConnected());
-                    //while(mSocket.isConnected() && replyFlag)git
-                    while (mSocket.isConnected()) {
+        try {
 
-                        String data = mInput.readLine();
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    while(true) {
+                        try {
+                            confirmTimer.set(confirmTimer.get() + 1);
+                            Thread.sleep(250);
+                            Log.i(TAG, "confirmTimerconfirmTimerconfirmTimerconfirmTimer confirmTimer    " + confirmTimer + " game_started.get() " + game_started.get() + "Pad: " +Pad.this.getUuid());
+                            Log.i(TAG, "\n2 seconds without signal xxxxxxxxxxxxxxxxxxxxxxxxxxxx off_confirmed: " + off_confirmed.get());
+                            if (confirmTimer.get() > 4) {
 
-                        if (data.length() > 1) {
+                                Log.i(TAG, "2 seconds without signal xxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+                                if (game_started.get() == 10) {
+                                    mConnectionService.broadcast(Pad.this, "PAD_HIT");
+                                    // Thread.currentThread().interrupt();
+                                }
+                            }
+                        } catch (Exception e) {
+                            Log.i(TAG, "Exception here-------------------+++++++++++++++++++");
+                            shutDown();
+                        }
+                    }
+
+                }
+            }).start();
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        mInput = new BufferedReader(new InputStreamReader(mSocket.getInputStream()));
+                        mOutput = new OutputStreamWriter(mSocket.getOutputStream(), "UTF-8");
+                        sendMessage(COMMANDS.CONNECT.getCommand());
+                        Log.i(TAG, "starting thread connect " + mSocket.isConnected());
+                        //while(mSocket.isConnected() && replyFlag)git
+                        while (!mSocket.isClosed() || !mSocket.isOutputShutdown()) {
+                            String data = "";
+
+
+
+                            try{
+                                data = mInput.readLine();
+
+                                confirmTimer.set(0);
+                                // sendMessage("8");
+                                // Thread.sleep(50);
+                                // sendMessage("8");
+                                // Thread.sleep(50);
+
+                            }catch (Exception e){
+                                Log.i(TAG, "The 2 writes failed Pad.java");
+                                data = "3";
+                                shutDown();
+                                break;
+                            }
+
+
+                            //String confirmed = "";
+
+                            if (data.length() > 1) {
                                 uuid = data;
                                 Log.i(TAG, "UUID received " + uuid);
                             }
@@ -106,24 +160,45 @@ public class Pad {
                                 Log.i(TAG, "Connected received");
                                 mConnectionService.broadcast(Pad.this, "PAD_CONNECTION_CHANGE");
                                 //handshakePollingService();
+                            } else if (data.equalsIgnoreCase("9")) {
+
+                                off_confirmed.set(1);
+                                Log.i(TAG, "Confirmation  received 999999999999999999999999999999999999999999");
+
+
+                                //mConnectionService.broadcast(Pad.this, "PAD_HIT");
                             } else if (data.equalsIgnoreCase("3") || data.equalsIgnoreCase(hitColor)) {
+                                confirmTimer.set(0);
+                                game_started.set(10);
+
 
                                 Log.i(TAG, "Hit received");
+                                //Send confirmation back and and wait for receipt
+                                //Thread.sleep(1000);
+                                //sendMessage("8");
+                                //receive confirmation
+
+
                                 mConnectionService.broadcast(Pad.this, "PAD_HIT");
                             }
-                            Log.i(TAG + " Input Thread", "Received: " + data);
+                            //  Log.i(TAG + " Input Thread", "Received: " + data);
 
 
+                        }
+                        //mSocket.close();
+                        Log.i(TAG, "Outside of the while loop in the Pad.java");
+                    } catch (Exception e) {
+                        Log.i(TAG, "interrupt thread from Pad");
+                        e.printStackTrace();
+                        shutDown();
+                        Thread.currentThread().interrupt();
                     }
-                } catch (Exception e) {
-                    Log.i(TAG, "interrupt thread from Pad");
-                    e.printStackTrace();
-                    shutDown();
-                    Thread.currentThread().interrupt();
                 }
-            }
 
-        }).start();
+            }).start();
+        } catch (Exception e) {
+            Log.i(TAG, "Couldn't start thread Pad.java");
+        }
     }
 
     public void handshakePollingService() {
@@ -155,7 +230,9 @@ public class Pad {
             if (mSocket.isConnected()) {
                 Log.i(TAG, "sending message: " + message);
                 mOutput.write(message, 0, message.length());
+                //mOutput.write(message, 0, message.length());
                 mOutput.flush();
+
             }
         } catch (Exception e) {
             Log.i(TAG, "send message error");
@@ -165,11 +242,12 @@ public class Pad {
 
     public void shutDown() {
         try {
-
+            Log.i(TAG, "Shutting down thread because pad failed Pad.java");
             if (mSocket.isConnected()) {
                 mInput.close();
                 mOutput.close();
                 mSocket.close();
+
             }
 
         } catch (Exception e) {
@@ -193,6 +271,15 @@ public class Pad {
 
     public void turnOff() {
         sendMessage(COMMANDS.LIGHT_OFF.getCommand());
+      }
+    public boolean get_off_confirmed(){
+        if (off_confirmed.get() == 1)
+            return true;
+        else
+            return false;
+    }
+    public void set_off_confirmed(){
+        off_confirmed.set(0);
     }
 
     public void startGame() {
