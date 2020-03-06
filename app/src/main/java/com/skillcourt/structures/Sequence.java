@@ -51,6 +51,7 @@ public class Sequence {
         }
     }
 
+
     public void next() {
         switch (gameMode) {
             case "Random":

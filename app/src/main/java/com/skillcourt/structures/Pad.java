@@ -8,6 +8,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -30,6 +31,9 @@ public class Pad {
     private AtomicInteger confirmTimer = new AtomicInteger(1);
     private AtomicInteger game_started = new AtomicInteger(1);
     private AtomicInteger off_confirmed = new AtomicInteger(0);
+    private Thread offPad, mainT;
+    private AtomicBoolean pad_off = new AtomicBoolean(false);
+    private boolean padOffBool = false;
 
     //Timer variable
     //ReplyFlag
@@ -41,6 +45,7 @@ public class Pad {
         mSocket = socket;
         mConnectionService = connectionService;
         game_started.set(0);
+       // pad_off= new AtomicBoolean(false);
     }
 
     public enum COMMANDS {
@@ -87,21 +92,26 @@ public class Pad {
         Log.i(TAG, "getting buffer reader " + mSocket.isConnected());
         try {
 
-            new Thread(new Runnable() {
+            offPad = new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    while(true) {
+                    while(!offPad.isInterrupted()) {
                         try {
                             confirmTimer.set(confirmTimer.get() + 1);
                             Thread.sleep(250);
-                            Log.i(TAG, "confirmTimerconfirmTimerconfirmTimerconfirmTimer confirmTimer    " + confirmTimer + " game_started.get() " + game_started.get() + "Pad: " +Pad.this.getUuid());
-                            Log.i(TAG, "\n2 seconds without signal xxxxxxxxxxxxxxxxxxxxxxxxxxxx off_confirmed: " + off_confirmed.get());
+                           // Log.i(TAG, "confirmTimerconfirmTimerconfirmTimerconfirmTimer confirmTimer    " + confirmTimer + " game_started.get() " + game_started.get() + "Pad: " +Pad.this.getUuid());
+                           // Log.i(TAG, "\n2 seconds without signal xxxxxxxxxxxxxxxxxxxxxxxxxxxx off_confirmed: " + off_confirmed.get());
                             if (confirmTimer.get() > 4) {
 
-                                Log.i(TAG, "2 seconds without signal xxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+                               //p Log.i(TAG, "2 seconds without signal xxxxxxxxxxxxxxxxxxxxxxxxxxxx");
                                 if (game_started.get() == 10) {
-                                    mConnectionService.broadcast(Pad.this, "PAD_HIT");
-                                    // Thread.currentThread().interrupt();
+                                    //mConnectionService.broadcast(Pad.this, "PAD_OFF");
+                                    Log.i(TAG, "Pad Off SENTTTTTTTTTTTTTTTTTTTTTTT");
+                                    //endGame();
+                                    pad_off.set(true);
+                                    //padOffBool = true;
+                                    //offPad.interrupt();
+
                                 }
                             }
                         } catch (Exception e) {
@@ -111,8 +121,9 @@ public class Pad {
                     }
 
                 }
-            }).start();
-            new Thread(new Runnable() {
+            });
+            offPad.start();
+            mainT = new Thread(new Runnable() {
                 @Override
                 public void run() {
                     try {
@@ -121,7 +132,7 @@ public class Pad {
                         sendMessage(COMMANDS.CONNECT.getCommand());
                         Log.i(TAG, "starting thread connect " + mSocket.isConnected());
                         //while(mSocket.isConnected() && replyFlag)git
-                        while (!mSocket.isClosed() || !mSocket.isOutputShutdown()) {
+                        while ((!mSocket.isClosed() || !mSocket.isOutputShutdown()) && !mainT.isInterrupted()) {
                             String data = "";
 
 
@@ -130,6 +141,10 @@ public class Pad {
                                 data = mInput.readLine();
 
                                 confirmTimer.set(0);
+                                pad_off.set(false);
+                                //padOffBool = false;
+                                if(offPad.isInterrupted())
+                                    offPad.start();
                                 // sendMessage("8");
                                 // Thread.sleep(50);
                                 // sendMessage("8");
@@ -167,6 +182,13 @@ public class Pad {
 
 
                                 //mConnectionService.broadcast(Pad.this, "PAD_HIT");
+                            } else if (data.equalsIgnoreCase("7")) {
+
+                            //off_confirmed.set(1);
+                            //Log.i(TAG, "Connected  received 77777777777777777777777777777777777");
+
+
+                            //mConnectionService.broadcast(Pad.this, "PAD_HIT");
                             } else if (data.equalsIgnoreCase("3") || data.equalsIgnoreCase(hitColor)) {
                                 confirmTimer.set(0);
                                 game_started.set(10);
@@ -195,7 +217,8 @@ public class Pad {
                     }
                 }
 
-            }).start();
+            });
+            mainT.start();
         } catch (Exception e) {
             Log.i(TAG, "Couldn't start thread Pad.java");
         }
@@ -262,7 +285,24 @@ public class Pad {
     }
 
     public void turnOn() {
-        sendMessage(COMMANDS.LIGHT_UP.getCommand());
+       try {
+            if (pad_off.get() == true) {
+                mConnectionService.broadcast(Pad.this, "PAD_HIT");
+                pad_off.set(false);
+            } else {
+                sendMessage(COMMANDS.LIGHT_UP.getCommand());
+           }
+        }catch (Exception e){
+           // pad_off = new AtomicBoolean(false);
+            sendMessage(COMMANDS.LIGHT_UP.getCommand());
+        }
+     /*   if (padOffBool == true) {
+            mConnectionService.broadcast(Pad.this, "PAD_HIT");
+            padOffBool = false;
+        } else {*/
+           // sendMessage(COMMANDS.LIGHT_UP.getCommand());
+        //}
+
     }
 
     public void turnOn(String color) {
@@ -286,7 +326,13 @@ public class Pad {
         sendMessage(COMMANDS.START_GAME.getCommand());
     }
 
+    public boolean get_pad_off(){
+        return pad_off.get();/* padOffBool;*/
+    }
     public void endGame() {
+       // mainT.interrupt();
+        pad_off.set(true);
+       // padOffBool = true;
         sendMessage(COMMANDS.END_GAME.getCommand());
     }
 }
