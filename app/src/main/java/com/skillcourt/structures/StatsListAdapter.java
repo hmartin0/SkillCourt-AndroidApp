@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.skillcourt.R;
@@ -28,6 +29,8 @@ public class StatsListAdapter extends ArrayAdapter<PlayerData> {
         TextView hHit;
         TextView hSessionPID;
         TextView hNotes;
+        TextView hGameType;
+        ImageView hGameTypeImg;
     }
 
 
@@ -61,8 +64,9 @@ public class StatsListAdapter extends ArrayAdapter<PlayerData> {
         String hit = getItem(position).getHits();
         String sessionPID = getItem(position).getSessioPlayerID();
         String notes = getItem(position).getNotes();
+        String gameType = getItem(position).getGameType();
 
-        PlayerData playerData = new PlayerData(id,date,time,score,hit,sessionPID,notes);
+        PlayerData playerData = new PlayerData(id,date,time,score,hit,sessionPID,notes,gameType);
 
         ViewHolder holder;
 
@@ -79,6 +83,8 @@ public class StatsListAdapter extends ArrayAdapter<PlayerData> {
             holder.hHit = convertView.findViewById(R.id.hitTextView);
             holder.hSessionPID = convertView.findViewById(R.id.sessionPlayerIDTextView);
             holder.hNotes = convertView.findViewById(R.id.noteTextView);
+            holder.hGameType = convertView.findViewById(R.id.gTypeTextView);
+            holder.hGameTypeImg = convertView.findViewById(R.id.gTypeImageView);
 
             convertView.setTag(holder);
         }
@@ -87,13 +93,23 @@ public class StatsListAdapter extends ArrayAdapter<PlayerData> {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.hId.setText(playerData.getId());
+        /*******REMOVE VISIBILITY FROM ADAPTER_VIEW_LAYOUT FOR DEBUGGING PURPOSE*****/
+        holder.hId.setText(playerData.getId());  // is invisible in UI
         holder.hDate.setText(playerData.getDate());
         holder.hGTime.setText(playerData.getGTime());
-        holder.hScore.setText(playerData.getScore());
+        holder.hScore.setText(playerData.getScore()); // is invisible in UI, start game, and end game file
         holder.hHit.setText(playerData.getHits());
-        holder.hSessionPID.setText(playerData.getSessioPlayerID());
+        holder.hSessionPID.setText(playerData.getSessioPlayerID()); // is invisible in UI
         holder.hNotes.setText(playerData.getNotes());
+        holder.hGameType.setText(playerData.getGameType()); // is invisible in UI but replaced with bottom ImageView
+        if(playerData.getGameType().equals("T"))
+        {
+            holder.hGameTypeImg.setImageResource(R.drawable.ic_av_timer_purple_24dp);
+        }
+        else
+        {
+            holder.hGameTypeImg.setImageResource(R.drawable.ic_kicking_a_footbal_ball);
+        }
 
         return convertView;
 

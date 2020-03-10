@@ -23,9 +23,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COL_5 = "HIT";
     public static final String COL_6 = "SESSIONPLAYER_ID";
     public static final String COL_7 = "NOTES";
+    public static final String COL_8 = "GAMETYPE";
 
     public DatabaseHelper(@Nullable Context context) {
-        super(context, DATABASE_NAME, null, 4);
+        super(context, DATABASE_NAME, null, 5);
     }
 
     @Override
@@ -39,7 +40,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "SCORE TEXT, " +
                 "HIT TEXT, " +
                 "SESSIONPLAYER_ID INTEGER, " +
-                "NOTES TEXT)");
+                "NOTES TEXT, " +
+                "GAMETYPE TEXT)");
 
     }
 
@@ -71,7 +73,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
 
-    public boolean insertData(String date, String time, String score, String hit,Integer sessionPlayerID, String notes)
+    public boolean insertData(String date, String time, String score, String hit,Integer sessionPlayerID, String notes, String gameType)
     {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
 
@@ -82,6 +84,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(COL_5, hit);
         contentValues.put(COL_6, sessionPlayerID);
         contentValues.put(COL_7, notes);
+        contentValues.put(COL_8, gameType);
 
         long result = sqLiteDatabase.insert(TABLE_NAME, null, contentValues);
 
@@ -142,7 +145,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return sqLiteDatabase.delete(TABLE_NAME, "SESSIONPLAYER_ID = ?", new String[]{id});
     }
 
-    public boolean updatePlayerNotes(String id, String date, String time, String score, String hit, String sessionPlayerID, String notes)
+    public boolean updatePlayerNotes(String id, String date, String time, String score, String hit, String sessionPlayerID, String notes, String gameType)
     {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -153,8 +156,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(COL_5, hit);
         contentValues.put(COL_6, sessionPlayerID);
         contentValues.put(COL_7, notes);
+        contentValues.put(COL_8, gameType);
         sqLiteDatabase.update(TABLE_NAME, contentValues, "ID = ?", new String[]{id});
         return true;
+    }
+
+    public Cursor getPlayerSessionGameTypeDATA(String sId, String gameType)
+    {
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        Cursor res = sqLiteDatabase.rawQuery("select * from " + TABLE_NAME +" WHERE SESSIONPLAYER_ID = ? AND GAMETYPE = ?" + " ORDER BY ID DESC", new String[] {sId, gameType});
+        return res;
     }
 
 }

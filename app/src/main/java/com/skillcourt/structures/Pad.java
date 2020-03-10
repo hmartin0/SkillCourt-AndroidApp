@@ -25,6 +25,7 @@ public class Pad {
     private ConnectionService mConnectionService;
     private int CurrentStatus;
     private int Order;
+    private String getMessage;
     //Timer variable
     //ReplyFlag
 
@@ -151,6 +152,28 @@ public class Pad {
     }
 
     private void sendMessage(String message) {
+
+        /*getMessage = message;
+
+        Thread thread = new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                try {
+                    if (mSocket.isConnected()) {
+                        Log.i(TAG, "sending message: " + getMessage);
+                        mOutput.write(getMessage, 0,getMessage.length());
+                        mOutput.flush();
+                    }
+                } catch (Exception e) {
+                    Log.i(TAG, "send message error");
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        thread.start();*/
+
         try {
             if (mSocket.isConnected()) {
                 Log.i(TAG, "sending message: " + message);

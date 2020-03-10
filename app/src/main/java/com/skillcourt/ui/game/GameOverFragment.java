@@ -46,6 +46,7 @@ import static android.content.Context.BIND_AUTO_CREATE;
 
 /**
  * Created by Joshua Mclendon on 2/7/18.
+ * Edited for Database by Hairon Martin 2/9/2020
  */
 public class GameOverFragment extends NonBottomNavigationFragments {
 
@@ -55,6 +56,7 @@ public class GameOverFragment extends NonBottomNavigationFragments {
     private int testHit;
     private int testMiss;
     private String mGameMode;
+    private String mGameType;
     private long mGameTime;
     private String mGameTimeString;
     private int hit, miss, totalPoints;
@@ -158,8 +160,10 @@ public class GameOverFragment extends NonBottomNavigationFragments {
         mScore.setText("Score: " + totalPoints);
 
         if (mGameTime != 0) {
+            mGameType = "T";
             setGameTimeText(mGameTime);
         } else {
+            mGameType = "H";
             mTime.setText(mGameTimeString);
         }
 
@@ -182,14 +186,14 @@ public class GameOverFragment extends NonBottomNavigationFragments {
         dateOutput = dateFormat.format(calendar.getTime());
 
 
-        // Save data to database
+        /************************** Save data to database *************************/
         saveDataButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 saveSession();
             }
         });
-
+        /**************************************************************************/
 
         mPlayAgainButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -254,7 +258,7 @@ public class GameOverFragment extends NonBottomNavigationFragments {
         }
     }
 
-    /*********************************************************************************************/
+    /*************************************DATABASE********************************************************/
 
     public ArrayList<SessionData> getSessionData()
     {
@@ -263,7 +267,7 @@ public class GameOverFragment extends NonBottomNavigationFragments {
 
         if(res.getCount() == 0)
         {
-            Toast.makeText(getActivity(), "Create a New Session!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Create New Session!", Toast.LENGTH_SHORT).show();
         }
 
         while(res.moveToNext())
@@ -330,7 +334,8 @@ public class GameOverFragment extends NonBottomNavigationFragments {
                                                 ""+totalPoints,
                                                 ""+(testHit + "/" + (testHit + testMiss)),
                                                 sessionID,
-                                                note);
+                                                note,
+                                                mGameType);
 
                                         saveDataButton.setEnabled(false);
                                         saveDataButton.setTextColor(Color.parseColor("#1285ff"));
@@ -376,9 +381,9 @@ public class GameOverFragment extends NonBottomNavigationFragments {
     }
 
 
-    public void addPlayerData(String date, String time, String score, String hit, Integer session_ID, String notes)
+    public void addPlayerData(String date, String time, String score, String hit, Integer session_ID, String notes, String gameType)
     {
-        boolean isInserted = mainActivity.myDB.insertData(date,time,score,hit,session_ID, notes);
+        boolean isInserted = mainActivity.myDB.insertData(date,time,score,hit,session_ID, notes, gameType);
 
         if(isInserted == true)
         {

@@ -1,6 +1,6 @@
 package com.skillcourt.structures;
 
-public class PlayerData {
+public class PlayerData{
     private String Id;
     private String Date;
     private String GTime;
@@ -8,8 +8,9 @@ public class PlayerData {
     private String Hits;
     private String SessioPlayerID;
     private String Notes;
+    private String GameType;
 
-    public PlayerData(String id, String date, String gTime, String score, String hits, String sessionPlayerID, String notes) {
+    public PlayerData(String id, String date, String gTime, String score, String hits, String sessionPlayerID, String notes, String gameType) {
         Id = id;
         Date = date;
         GTime = gTime;
@@ -17,6 +18,7 @@ public class PlayerData {
         Hits = hits;
         SessioPlayerID = sessionPlayerID;
         Notes = notes;
+        GameType = gameType;
     }
 
     public String getId() {
@@ -73,5 +75,13 @@ public class PlayerData {
 
     public void setNotes(String notes) {
         Notes = notes;
+    }
+
+    public String getGameType() {
+        return GameType;
+    }
+
+    public void setGameType(String gameType) {
+        GameType = gameType;
     }
 }
