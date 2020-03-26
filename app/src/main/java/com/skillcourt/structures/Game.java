@@ -43,6 +43,9 @@ public class Game extends Thread {
             //sequence.getCurrentLitPad().turnOff();     //Once nessesary to end the game//
             //sequence.getCurrentLitPad().endGame();
             pad.turnOff();
+            while(pad.get_off_confirmed() == false && pad.get_pad_off() == false){
+
+            }
             pad.endGame();
             Log.i(TAG, "Sending game over");
         }
@@ -70,10 +73,14 @@ public class Game extends Thread {
     private void playGame(long startTime) {
         isHit = false;
         sequence.next();
+      /*  while (sequence.getCurrentLitPad().get_pad_off() == true){
+            Log.i(TAG, "This pad is off: --------------------------- ---------------------------------- " + sequence.getCurrentLitPad().getUuid());
+            sequence.next();
+        }*/
         //if the player specified a time that the pad stays lit
         if (padLightUpTime != 0) {
             long startLightUpTime = System.currentTimeMillis();
-            //basically loop for the amount of time in seconds (ex. 5 secs) and if the pad isn't hit
+
             while (padLightUpTime > System.currentTimeMillis() - startLightUpTime && !isHit) {
                 //if the time of the game runs out then the game is over
                 //so interrupt if it hasn't already been interrupted
@@ -85,7 +92,13 @@ public class Game extends Thread {
             //if there was a light up time and it expired before the pad was hit then turn it off
             //since the pad only turns off if hit or when we tell it too
             if (!isHit) {
-                sequence.getCurrentLitPad().turnOff();
+                Pad temp = sequence.getCurrentLitPad();
+                temp.turnOff();
+                while(temp.get_off_confirmed() == false && temp.get_pad_off() == false){
+
+                }
+                Log.i(TAG, "Confirmed off from Gamoe.java 9-9-9-9-9-9-9-9-9-9-9-9-9-9-9-9");
+                temp.set_off_confirmed();
                 for (Player player : getSequence().getPlayers()) {   //Added to keep track of Missed hits//
                     player.addMiss();
                     player.removePoints();

@@ -28,6 +28,7 @@ public class GameService extends Service {
     private static final String TAG = GameService.class.getName();
     private static final String PAD_HIT = "PAD_HIT";
     private static final String PAD_HIT_UUID = "PAD_HIT_UUID";
+    private static final String PAD_HIT_UUID_FAKE = "PAD_HIT_UUID_FAKE";
     private static final String END_GAME_SERVICE = "END_GAME_SERVICE";
     private ConnectionService mConnectionService;
     private List<Player> players;
@@ -216,12 +217,45 @@ public class GameService extends Service {
                 }
 
 
-            } else if (intent.getAction().equals(END_GAME_SERVICE)) {
+            } else if (intent.getAction().equals(PAD_HIT_UUID_FAKE)) {
+                Log.i(TAG, "Hit received");
+                String key = "Pad " + intent.getStringExtra(PAD_HIT_UUID);
+
+                for (Game game : games) {
+                    if (game.getSequence().getUUIDs().contains(intent.getStringExtra(PAD_HIT_UUID))) {
+                        if (game.getSequence().getCurrentActiveUUID().equals(intent.getStringExtra(PAD_HIT_UUID))) {
+                           /* for (Player player : game.getSequence().getPlayers()) {
+                                player.addHit();
+                                player.addPoints();
+                            }*/
+                            Intent intentPadHit = new Intent();
+                            intentPadHit.setAction("PAD_HIT_UI_COUNT_CHANGE"); //WHEN DOES IT CHANGE HARDWARE PAD COLOR//
+                            sendBroadcast(intentPadHit);
+                            game.setIsHit(true);
+
+                        } else {
+                            for (Player player : game.getSequence().getPlayers()) {  //Moved to Game.java to accurately keep track//
+                                //player.addMiss();
+                                //player.removePoints();
+                            }
+                            Intent intentPadMiss = new Intent();
+                            intentPadMiss.setAction("PAD_MISS_UI_COUNT_CHANGE");
+                            sendBroadcast(intentPadMiss);
+                        }
+                        break;
+                    }
+
+
+                }
+
+
+            }else if (intent.getAction().equals(END_GAME_SERVICE)) {
                 Log.i(TAG, "Calling End Game service");
                 endGame();
                 stopSelf();
             }
 
         }
+
     }
 }

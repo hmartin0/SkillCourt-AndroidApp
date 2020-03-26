@@ -51,6 +51,7 @@ public class Sequence {
         }
     }
 
+
     public void next() {
         switch (gameMode) {
             case "Random":
@@ -105,7 +106,17 @@ public class Sequence {
         } else {
             nextPad = null;
         }
-        currentLitPad = pads.get(mCurrentPadLit);
+
+        try {
+            currentLitPad = pads.get(mCurrentPadLit);
+        }catch (Exception e){
+            for(int counter = 0; counter < pads.size(); counter++){
+                try{
+                    currentLitPad = pads.get(counter);
+                    break;
+                }catch (Exception ex){Log.i(TAG, "Index out of bounce " + ex.getMessage());}
+            }
+        }
 
         //if we are in duo game type then alternate the lighting of the player's colors
         //for example player 1 can have red while player 2 can have green
@@ -187,6 +198,10 @@ public class Sequence {
 
     public void addToSequence(Integer num) {
         sequence.add(num);
+    }
+
+    public void removeFromSequence(Integer num) {
+        sequence.remove(num);
     }
 
     public void addToFront(Integer num) {

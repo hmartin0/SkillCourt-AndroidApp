@@ -101,6 +101,11 @@ public class ConnectionService extends Service {
         } else if (intent.equals("PAD_HIT")) {
             i.putExtra("PAD_HIT_UUID", pad.getUuid());
             Log.i(TAG, "Pad " + pad.getUuid() + " hit " + mPadsConnected);
+
+        } else if (intent.equals("PAD_HIT_FAKE")) {
+            i.putExtra("PAD_HIT_UUID", pad.getUuid());
+            Log.i(TAG, "Pad " + pad.getUuid() + " hit FAKE " + mPadsConnected);
+
         }
 
         i.setAction(intent);
