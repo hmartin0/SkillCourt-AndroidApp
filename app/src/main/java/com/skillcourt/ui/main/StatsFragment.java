@@ -1,14 +1,20 @@
 package com.skillcourt.ui.main;
 import android.app.AlertDialog;
+import android.app.Fragment;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,15 +37,22 @@ import java.util.Objects;
  */
 public class StatsFragment extends BaseFragment {
 
-    SwipeMenuListView user_stats_listView;
-    SwipeMenuListView player_stats_listView;
-    ArrayList<PlayerData> playerDataItemsList;
-    ArrayList<SessionData> sessionDataItemsList;
-    StatsListAdapter playerAdapter;
-    SessionListAdapter sessionAdapter;
-    String myDeleteID;
-    int sessDeletePosition;
-    Boolean noteClicked = true;
+    private SwipeMenuListView user_stats_listView;
+    private SwipeMenuListView player_stats_listView;
+    private LinearLayout s_Head_Linear_Layout;
+    private LinearLayout p_Head_Linear_Layout;
+    private LinearLayout graph_Linear_layout;
+    private TextView sessTextHeader;
+    private ArrayList<PlayerData> playerDataItemsList;
+    private ArrayList<PlayerData> graphHitPlayerDataList;
+    private ArrayList<SessionData> sessionDataItemsList;
+    private StatsListAdapter playerAdapter;
+    private SessionListAdapter sessionAdapter;
+    private String myDeleteID;
+    private int sessDeletePosition;
+    private Boolean noteClicked = true;
+    private Boolean graphClicked = true;
+    private ImageButton graphButton;
 
     public StatsFragment() {
         // Required empty public constructor
@@ -60,6 +73,12 @@ public class StatsFragment extends BaseFragment {
         super.onViewCreated(view, savedInstanceState);
         user_stats_listView = getActivity().findViewById(R.id.dataListView);
         player_stats_listView = getActivity().findViewById(R.id.playerDataListView);
+        s_Head_Linear_Layout = getActivity().findViewById(R.id.sessHeadingLinearLayout);
+        p_Head_Linear_Layout = getActivity().findViewById(R.id.playerHeadingLinearLayout);
+        graph_Linear_layout = getActivity().findViewById(R.id.graphLinearLayout);
+        sessTextHeader = getActivity().findViewById(R.id.sessionTextHeader);
+        graphButton = getActivity().findViewById(R.id.buttonGraph);
+
 
         /**************************************************************************/
         sessionDataItemsList = new ArrayList<>();
@@ -111,14 +130,19 @@ public class StatsFragment extends BaseFragment {
                 SessionData content = sessionDataItemsList.get(i);
                 String getClickSessionID = content.getSessionID();
 
-                getActivity().findViewById(R.id.dataListView).setVisibility(View.GONE);
-                getActivity().findViewById(R.id.playerDataListView).setVisibility(View.VISIBLE);
+                user_stats_listView.setVisibility(View.GONE);
+                player_stats_listView.setVisibility(View.VISIBLE);
+                s_Head_Linear_Layout.setVisibility(View.GONE);
+                p_Head_Linear_Layout.setVisibility(View.VISIBLE);
 
+                sessTextHeader.setText("Session: " +getClickSessionID);
                 playerDataItemsList = new ArrayList<>();
-                playerDataItemsList = getSavedPlayerData(getClickSessionID);
+                playerDataItemsList = getSavedPlayerData(getClickSessionID, "");
                 playerAdapter = new StatsListAdapter(Objects.requireNonNull(getActivity()), R.layout.adapter_view_layout, playerDataItemsList);
 
                 player_stats_listView.setAdapter(playerAdapter);
+
+                showGraph(getClickSessionID);
 
                 // Swipe to delete menu
                 SwipeMenuCreator creator = new SwipeMenuCreator() {
@@ -229,15 +253,32 @@ public class StatsFragment extends BaseFragment {
         return tempList;
     }
 
-    public ArrayList<PlayerData> getSavedPlayerData(String getClSessionID)
+    public ArrayList<PlayerData> getSavedPlayerData(String getClSessionID, String GameTypeSet)
     {
-        //Cursor playerRes = mainActivity.myDB.getAllPlayerData();
-        Cursor playerRes = mainActivity.myDB.getPlayerSessionDATA(getClSessionID);
+        Cursor playerRes;
+
+        if(GameTypeSet.equals("H"))
+        {
+            playerRes = mainActivity.myDB.getPlayerSessionGameTypeDATA(getClSessionID,GameTypeSet);
+        }
+        else
+        {
+            //Cursor playerRes = mainActivity.myDB.getAllPlayerData();
+            playerRes = mainActivity.myDB.getPlayerSessionDATA(getClSessionID);
+        }
+
         ArrayList<PlayerData> tempList = new ArrayList<>();
 
         if(playerRes.getCount() == 0)
         {
-            Toast.makeText(getActivity(), "No Save Data Has Been Added For Session! " + getClSessionID, Toast.LENGTH_SHORT).show();
+            if(GameTypeSet.equals("H"))
+            {
+                Toast.makeText(getActivity(), "No HIT Game Type Data Added", Toast.LENGTH_SHORT).show();
+            }
+            else
+            {
+                Toast.makeText(getActivity(), "No Save Data Has Been Added For Session! " + getClSessionID, Toast.LENGTH_SHORT).show();
+            }
         }
 
         while(playerRes.moveToNext())
@@ -249,8 +290,9 @@ public class StatsFragment extends BaseFragment {
             String hitStats = playerRes.getString(4);
             String sessionPlayerIDStats = playerRes.getString(5);
             String noteStats = playerRes.getString(6);
+            String gameType = playerRes.getString(7);
 
-            PlayerData stats = new PlayerData(idStats,dateStats,gTimeStats,scoreStats,hitStats, sessionPlayerIDStats,noteStats);
+            PlayerData stats = new PlayerData(idStats,dateStats,gTimeStats,scoreStats,hitStats, sessionPlayerIDStats, noteStats, gameType);
             tempList.add(stats);
 
         }
@@ -326,7 +368,8 @@ public class StatsFragment extends BaseFragment {
                                         playerContent.getScore(),
                                         playerContent.getHits(),
                                         playerContent.getSessioPlayerID(),
-                                        newNotes);
+                                        newNotes,
+                                        playerContent.getGameType());
 
                                 playerContent.setNotes(newNotes);
                                 playerAdapter.updateData();
@@ -352,5 +395,52 @@ public class StatsFragment extends BaseFragment {
         AlertDialog alertDialog = alertDialogBuilder.create();
 
         alertDialog.show();
+    }
+
+
+    public void showGraph(String clickedSessionID)
+    {
+        final String mySessionID = clickedSessionID;
+
+        graphButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                // Get all hit game type of all games from this session for graph data.
+                graphHitPlayerDataList = new ArrayList<>();
+                graphHitPlayerDataList = getSavedPlayerData(mySessionID, "H");
+                ArrayList<String> datesList = new ArrayList<>();
+                ArrayList<String> hitsList = new ArrayList<>();
+
+                for(int i = 0; i < graphHitPlayerDataList.size(); i++ )
+                {
+                    datesList.add(graphHitPlayerDataList.get(i).getDate());
+                    hitsList.add(graphHitPlayerDataList.get(i).getHits());
+                }
+
+                if(graphHitPlayerDataList.size() != 0)
+                {
+                    if(graphClicked){
+
+                        graph_Linear_layout.setVisibility(View.VISIBLE);
+                        FragmentManager fragmentManager = getFragmentManager();
+                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                        GraphStats graphFragment = new GraphStats();
+                        fragmentTransaction.add(R.id.graphLinearLayout,graphFragment).commit();
+
+                        Bundle bundle = new Bundle();
+                        bundle.putStringArrayList("dateData", datesList);
+                        bundle.putStringArrayList("hitData", hitsList);
+                        graphFragment.setArguments(bundle);
+
+                        graphClicked = false;
+                    }
+                    else {
+                        graph_Linear_layout.setVisibility(View.GONE);
+                        graphClicked = true;
+                    }
+                }
+            }
+        });
     }
 }

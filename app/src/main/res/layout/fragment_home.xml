@@ -22,6 +22,9 @@
                 android:fontFamily="@font/regular"
                 android:layout_above="@id/pad_settings"
                 android:background="@drawable/home_play_color"
+                android:drawableRight="@drawable/ic_play_circle_outline_white_35dp"
+                android:paddingRight="26dip"
+                android:drawablePadding="2dip"
                 android:textColor="@color/colorButtonText"
                 android:textSize="15dp"
                 android:layout_centerHorizontal="true"
@@ -34,11 +37,29 @@
                 android:layout_centerInParent="true"
                 android:background="@drawable/home_play_color"
                 android:textColor="@color/colorButtonText"
+                android:drawableRight="@drawable/ic_pad_setting_icon_layer"
+                android:paddingRight="26dip"
+                android:drawablePadding="2dip"
                 android:fontFamily="@font/regular"
                 android:textSize="15dp"
                 android:layout_marginTop="25dp"
                 android:layout_marginBottom="25dp"
                 android:text="Pad Settings" />
+
+            <Button
+                android:id="@+id/websiteButton"
+                android:layout_width="220dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/regular"
+                android:layout_below="@id/pad_settings"
+                android:background="@drawable/home_play_color"
+                android:drawableRight="@drawable/ic_website_button"
+                android:paddingRight="26dip"
+                android:drawablePadding="2dip"
+                android:textColor="@color/colorButtonText"
+                android:textSize="15dp"
+                android:layout_centerHorizontal="true"
+                android:text="Website" />
 
         </RelativeLayout>
 

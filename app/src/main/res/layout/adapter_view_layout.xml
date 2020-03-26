@@ -18,7 +18,9 @@
         android:animateLayoutChanges="true"
         android:weightSum="100">
 
-        <!--Layout_weight must sum up to 99.9 for equal distance between TextViews-->
+        <!--Layout_weight must sum up to 100 for equal distance between TextViews-->
+        <!--REMOVE VISIBILITY FOR DEBUGGING PURPOSE-->
+        <!--CHANGE LAYOUT_WEIGHT TO VIEW DEBUGGING TEXTVIEWS-->
         <TextView
             android:id="@+id/idTextView"
             android:layout_width="12dp"
@@ -32,11 +34,41 @@
             android:textStyle="bold"
             android:textColor="@color/colorPrimary"
             android:text="1"
-            android:layout_weight="12"/>
+            android:layout_weight="10"
+            android:visibility="gone"/>
+
+        <ImageView
+            android:id="@+id/gTypeImageView"
+            android:layout_width="11dp"
+            android:layout_height="match_parent"
+            android:background="#00000000"
+            android:paddingTop="10dp"
+            android:src="@drawable/ic_kicking_a_footbal_ball"
+            android:paddingBottom="8dp"
+            android:layout_weight="11"
+            android:contentDescription="img" />
+
+        <!--REMOVE VISIBILITY FOR DEBUGGING PURPOSE-->
+        <!--CHANGE LAYOUT_WEIGHT TO VIEW DEBUGGING TEXTVIEWS-->
+        <TextView
+            android:id="@+id/gTypeTextView"
+            android:layout_width="11dp"
+            android:textAlignment="center"
+            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/bold"
+            android:paddingTop="10dp"
+            android:paddingBottom="8dp"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimary"
+            android:text="4"
+            android:layout_weight="11"
+            android:visibility="gone"/>
 
         <TextView
             android:id="@+id/dateTextView"
-            android:layout_width="22dp"
+            android:layout_width="24dp"
             android:textAlignment="center"
             android:gravity="center"
             android:layout_height="wrap_content"
@@ -47,11 +79,11 @@
             android:textStyle="bold"
             android:textColor="@color/colorPrimary"
             android:text="2"
-            android:layout_weight="22"/>
+            android:layout_weight="24"/>
 
         <TextView
             android:id="@+id/gTimeTextView"
-            android:layout_width="22dp"
+            android:layout_width="32.5dp"
             android:textAlignment="center"
             android:gravity="center"
             android:layout_height="wrap_content"
@@ -62,8 +94,10 @@
             android:textStyle="bold"
             android:textColor="@color/colorPrimary"
             android:text="3"
-            android:layout_weight="22"/>
+            android:layout_weight="32.5"/>
 
+        <!--REMOVE VISIBILITY TO SHOW SCORE -->
+        <!--CHANGE LAYOUT_WEIGHT TO VIEW SCORE TEXTVIEWS-->
         <TextView
             android:id="@+id/scoreTextView"
             android:layout_width="10dp"
@@ -76,12 +110,13 @@
             android:textSize="16sp"
             android:textStyle="bold"
             android:textColor="@color/colorPrimary"
-            android:text="4"
-            android:layout_weight="10"/>
+            android:text="5"
+            android:layout_weight="10"
+            android:visibility="gone"/>
 
         <TextView
             android:id="@+id/hitTextView"
-            android:layout_width="10dp"
+            android:layout_width="32.5dp"
             android:textAlignment="center"
             android:gravity="center"
             android:layout_height="wrap_content"
@@ -91,8 +126,11 @@
             android:textSize="16sp"
             android:textStyle="bold"
             android:textColor="@color/colorPrimary"
-            android:text="5"
-            android:layout_weight="10"/>
+            android:text="6"
+            android:layout_weight="32.5"/>
+
+        <!--REMOVE VISIBILITY FOR DEBUGGING PURPOSE-->
+        <!--CHANGE LAYOUT_WEIGHT TO VIEW DEBUGGING TEXTVIEWS-->
         <TextView
             android:id="@+id/sessionPlayerIDTextView"
             android:layout_width="22dp"
@@ -105,16 +143,18 @@
             android:textSize="16sp"
             android:textStyle="bold"
             android:textColor="@color/colorPrimary"
-            android:text="6"
-            android:layout_weight="22"/>
+            android:text="7"
+            android:layout_weight="22"
+            android:visibility="gone"/>
     </LinearLayout>
 
     <TextView
         android:id="@+id/noteTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="45dp"
         android:maxLines="1"
-        android:paddingStart="10dp"
+        android:paddingStart="17dp"
         android:paddingEnd="10dp"
         android:paddingBottom="10dp"
         android:fontFamily="@font/regular"

@@ -1,6 +1,8 @@
 package com.skillcourt.ui.main;
 
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -26,6 +28,7 @@ public class HomeFragment extends BaseFragment {
 
     private Button mPlayButton;
     private Button padSettingButton;
+    private Button websiteButton;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -44,6 +47,7 @@ public class HomeFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mainActivity.setTitle("SkillCourt");
+
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_home, container, false);
     }
@@ -55,6 +59,15 @@ public class HomeFragment extends BaseFragment {
 
         padSettingButton = getActivity().findViewById(R.id.pad_settings);
         mPlayButton = getActivity().findViewById(R.id.playButton);
+        websiteButton = getActivity().findViewById(R.id.websiteButton);
+
+        websiteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent browse = new Intent(Intent.ACTION_VIEW, Uri.parse("http://skillcourt.com"));
+                startActivity(browse);
+            }
+        });
 
         padSettingButton.setOnClickListener(new View.OnClickListener() {
             @Override
